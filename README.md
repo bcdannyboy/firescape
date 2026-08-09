@@ -2,7 +2,7 @@
 
 **An open-source adversarial laboratory for falsifying wildfire evacuation plans and ranking interventions.**
 
-> **Status:** Pre-implementation research project. Firescape does not provide live evacuation guidance, certify community safety, or replace emergency-management authority.
+> **Status:** Conditional GO for a bounded implementation and algorithmic research program. Firescape does not provide live evacuation guidance, certify community safety, or replace emergency-management authority. See the [first end-to-end research decision](research/first-loop/GATE_REPORT.md).
 
 Wildfire evacuation plans are normally tested against a small collection of expected or manually selected scenarios. Real disasters can combine unusual fire approaches, warning delays, uneven message delivery, late departures, route noncompliance, institutional demand, crashes, road loss, smoke, and regional congestion.
 
@@ -230,7 +230,7 @@ The project should stop or substantially change direction if:
 - intervention rankings reverse under reasonable model shifts;
 - outputs cannot influence a plan, exercise, engineering study, evidence collection, or funding decision.
 
-See [RESEARCH_BACKLOG.md](RESEARCH_BACKLOG.md) for the experiments and gates that test this claim.
+The first evidence loop found a credible residual contribution only in the open adversarial verification, minimization, and held-out retest workflow—not in generic coupled simulation. See the [research decision](research/first-loop/GATE_REPORT.md) and [implementation and algorithmic research backlog](RESEARCH_BACKLOG.md).
 
 ## Existing systems and Firescape's intended contribution
 
@@ -321,16 +321,16 @@ Every published result must preserve the chain from source data through scenario
 
 ## Contributing
 
-The project is not yet ready for implementation contributions. Early contributions should focus on:
+The project is ready for narrowly scoped research-kernel implementation contributions. The current priorities are:
 
-- relevant datasets and their limitations;
-- documented evacuation failure mechanisms;
-- simulator and optimization baselines;
-- practitioner requirements;
-- reproducible historical cases;
-- criticism of the scientific hypothesis and validation design.
+- versioned schemas, manifests, and deterministic experiment execution;
+- exhaustively enumerable golden failure worlds and safety oracles;
+- public data provenance and the Paradise–Magalia evidence ledger;
+- SUMO and ELMFIRE adapters with contract tests;
+- strong scenario-selection baselines, especially Sobol and cross-entropy search;
+- replay, counterexample minimization, and held-out intervention evaluation.
 
-Please open a discussion or issue before starting a substantial implementation.
+Statewide ingestion, operational routing, product UI, and deep-learning work remain gated. Please open a discussion or issue before starting a substantial implementation and identify the exact backlog item it advances.
 
 ## License
 

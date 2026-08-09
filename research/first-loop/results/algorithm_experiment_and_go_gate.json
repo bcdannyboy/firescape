@@ -1,0 +1,281 @@
+{
+  "research_object": "First falsifiable Firescape experiment: an equal-budget benchmark of adversarial scenario search for wildfire-evacuation failure discovery, certificate minimization, and intervention attack-repair-retest on synthetic golden worlds plus one Paradise-Magalia-style case.",
+  "real_world_harm_and_scale": "Wildland-urban interface evacuation failure is a life-safety problem, not a mere travel-time problem. NIST's Camp Fire investigation reports 85 civilian fatalities, more than 19,000 destroyed or damaged structures, and rapid entrapment of evacuees during the 2018 Paradise-Concow-Magalia event. NIST's life-safety report states that about 40,000 people attempted to evacuate, that routes which normally took about 25 minutes took hours or became impassable, and that many people lost every safe egress route. The wildfire-evacuation verification literature also cites about US$3 billion in evacuation costs in the United States. The harm is concentrated in fast-moving, low-notice, high-congestion events where queueing, delayed warning, smoke, road loss, and institutional demand interact.",
+  "causal_path_to_harm_reduction": "A useful first-loop algorithm would improve harm only through a specific chain: better search finds severe but still plausible evacuation failures that ordinary scenario testing misses; replay and minimization convert those failures into small, understandable causal certificates; planners or researchers test a bounded intervention catalog against those certified failure families; held-out attacks identify whether a proposed repair lowers tail risk without harming the worst-served zone; the resulting artifact changes a concrete decision such as zone timing, route control, traffic post staffing, assisted-evacuation capacity, drill design, or evidence collection. If any step fails, the pathway to harm reduction fails. Firescape should therefore optimize for decision-changing evidence, not simulator spectacle.",
+  "exact_bottleneck": "The bottleneck is not 'simulate wildfire evacuation' but 'discover, under a fixed expensive-simulation budget, more severe and causally diverse plausible failures than strong non-adaptive baselines, then convert them into robust intervention evidence.' The computational subproblem is rare-event search over a coupled scenario envelope with hard joint constraints, mixed continuous/discrete variables, stochastic outputs, and expensive full simulation calls.",
+  "decision_or_capability_changed": "The first experiment should change one narrow capability decision: whether Firescape should exist as an adversarial evidence layer at all, versus collapsing into simpler baseline scenario testing, trigger-buffer planning, or single-model evacuation analysis. If positive, it also changes the immediate operational capability to produce failure certificates and ranked intervention cards for one bounded case study rather than generic statewide tooling.",
+  "closest_systems_and_attempts": "Closest overlaps split into four buckets. First, coupled open research platforms: WUI-NITY integrates wildfire spread, pedestrian, and traffic layers, and the 2023 verification paper shows explicit multi-layer verification tests; WiSE integrates fire dynamics, behavior, traffic, and a Bayesian network to estimate safe egress probability for Paradise. Second, commercial operational products: Ladris Evac advertises evacuation simulation and optimization for planning and active disasters; Genasys Protect advertises zone-based evacuation updates, facility updates, and traffic models. Third, trigger and timing systems: WUIVAC and later fire-traffic trigger papers compute evacuation trigger buffers from fire spread and traffic assumptions. Fourth, transport-only or corridor-optimization work: recent Lahaina modeling isolates lane-capacity and contraflow benefits. Exact overlap with Firescape is partial. These systems show that coupled evacuation modeling already exists, but none of the sourced systems demonstrate the full open loop of equal-budget adversarial search, plausibility rejection, failure replay, minimization, causal-family coverage accounting, intervention selection from discovered failures, and held-out retest as the primary product.",
+  "publication_and_group_attention_since_2020": "[uncertain] Attention since 2020 appears real but concentrated rather than crowded. Evidence includes the WUI-NITY platform line (2020 platform report, 2021 Safety Science paper, 2021 WUI-NITY 2 validation report, 2023 verification paper, 2024 WUI-NITY 4 report), NIST's Camp Fire and ESCAPE work (2023 through 2025), wildfire-behavior and smoke studies, a 2024 WiSE framework, and fresh 2026 work on evacuation behavior, wildfire mapping safety guarantees, and Lahaina traffic optimization. The active groups visible in primary sources are concentrated around Lund/WUI-NITY collaborators, NIST and its federal-state partners, Utah wildfire-trigger researchers, several transport-modeling groups, and a small number of recent ML authors. I did not run a full bibliometric census, so the publication-volume claim should be treated as scoped-search evidence rather than an exhaustive count.",
+  "funding_commercial_and_government_activity": "[uncertain] Government and quasi-public activity is strong enough to prove relevance but not enough to prove an open benchmark already exists. NIST has sustained a multi-year Camp Fire and ESCAPE program with federal and state partners. CAL FIRE and Caltrans maintain public data and planning infrastructure relevant to evacuation analysis. Commercial activity is clear from Ladris and Genasys product pages and customer/agency positioning, showing agencies do pay for wildfire-evacuation decision support. What remains unclear from public sources alone is the current depth of agency procurement, the share of work done by consultants versus internal teams, and whether any operator is already running an adversarial-search-style loop privately. That uncertainty is a warning for translation claims, not for the technical experiment itself.",
+  "benchmark_and_open_source_maturity": "[uncertain] Open-source maturity is mixed. Fire and traffic components are mature enough to start: ELMFIRE, ForeFire, Cell2Fire, SUMO, and MATSim are all publicly documented and actively available. Wildfire-evacuation verification maturity is improving: the 2023 WUI verification paper contributes 24 verification tests across traffic, pedestrian, wildfire, and interaction layers. Data maturity is also usable through LANDFIRE, USGS 3DEP, NOAA HRRR, Caltrans PeMS, LEHD/LODES, and NIST case-study material. What is immature is the benchmark layer that Firescape most needs: there is no standard open benchmark for equal-budget rare-event discovery, plausibility-adjusted failure yield, causal-family diversity, or intervention retest in wildfire evacuation. That missing benchmark is exactly why the first loop can still be differentiated.",
+  "residual_contribution": "The credible residual contribution is narrow and methodological: an open benchmark plus execution loop for plausibility-constrained failure search, certificate extraction, and intervention retesting. Firescape should not claim novelty from coupling fire and traffic, from evacuation simulation itself, or from zone-management UX. It should claim novelty only if it produces a transparent protocol in which strong equal-budget baselines are frozen, invalid scenarios are rejected with reasons, discovered failures are replayed and minimized, causal families are counted, interventions are selected from those families, and held-out attacks plus cross-model checks determine whether the repair survives.",
+  "why_little_attention": "The residual path has likely received less attention for reasons that are partly opportunity and partly warning. Opportunity: it sits between wildfire science, traffic simulation, evacuation behavior, and safety validation, so ownership is fragmented; open benchmark work is less commercially legible than closed products; verification and negative results are under-produced public goods. Warning: the task is expensive, calibration data are scarce, liability is high, and model outputs can easily outrun their evidence base. These warning signs mean the first experiment should be benchmark-first and geography-narrow, not an early productization bet.",
+  "public_data_and_ground_truth": "[uncertain] Public data are sufficient for a first loop if the scope is narrow. LANDFIRE provides fuels and canopy products and has more than 20 years of wildfire-management data products; USGS 3DEP provides free elevation and lidar-derived DEM products without use restrictions; NOAA HRRR is a 3 km, hourly updated open weather archive; Caltrans PeMS provides real-time detector feeds plus more than ten years of historical data; LEHD/LODES provides block-level job-flow and workplace data; NIST provides rich Camp Fire fire-timeline and life-safety case-study material. Ground truth is strongest for historical traffic patterns, topography, fuels, and the Camp Fire qualitative failure mechanisms. Ground truth is weaker for household-level departure timing, route compliance, temporary-refuge choice, institutional loading delays, and informal shadow evacuation. The first loop should therefore avoid claims of household-perfect reconstruction and instead treat Paradise-Magalia as a bounded replay-and-stress-test case with explicit exclusions.",
+  "simulator_and_tool_options": "Primary fire-side options are ELMFIRE, ForeFire, and Cell2Fire. ELMFIRE is attractive because it is open source, explicitly supports historical reconstruction and validation workflows, and is oriented toward operational wildfire spread use. ForeFire is attractive as a modern open C++ wildfire engine with documentation and demo support. Cell2Fire is attractive for batch statistical runs and research experimentation but is less obviously the primary high-credibility replay engine for this first loop. Primary traffic-side options are SUMO/libsumo and MATSim. SUMO is attractive for scriptable microscopic, intermodal runs and large-network tooling; MATSim is attractive as an authoritative open multi-agent transport framework and as a secondary cross-model check. A practical first loop should also include a pure-Python synthetic benchmark simulator for deterministic golden worlds, plus Python orchestration for scenario schemas, constraints, search, replay, minimization, and accounting.",
+  "recommended_technical_stack": "[uncertain] Recommended stack for the first loop: Python 3.12 orchestration; deterministic pure-Python golden-world simulator for FIRE-R004; primary geographic stack of ELMFIRE for fire-arrival traces plus SUMO/libsumo for traffic and route-state evolution; optional secondary check with MATSim on a small replay subset, not on the full search budget; scenario schema in JSON/YAML with provenance and hard-constraint validators; search baselines in NumPy/SciPy plus Sobol or Latin-hypercube utilities; adaptive search starting with transparent cross-entropy method and MAP-Elites-style quality-diversity over failure descriptors; replay/minimization via seeded reruns and delta-debugging; experiment tracking in flat files plus Parquet. This is preferred over DRL-style AST for loop one because cross-entropy and MAP-Elites are easier to audit, easier to equal-budget benchmark, and less likely to hide gains inside policy-training instability. The uncertain part is integration burden: ELMFIRE plus SUMO is my best scoped recommendation from the available sources, but the true coupling friction must still be verified locally.",
+  "repeated_unresolved_limitations": "Repeated limitations across the sourced literature are consistent: wildfire-evacuation model verification is immature enough that a dedicated protocol only appeared in 2023; calibration and validation datasets are sparse; household behavior and departure timing remain highly variable; smoke, temporary refuge, and institutional demand are hard to encode cleanly; and many models remain scenario-analysis tools rather than decision-grade certified systems. The 2026 behavior paper reinforces that transportation mode can be predicted more reliably than evacuation timing, which is a direct warning against overconfident micro-behavior claims. Recent wildfire mapping safety work also highlights that standard ML thresholds can be unsafe because false negatives carry direct evacuation risk.",
+  "excluded_populations_geographies_and_failures": "The first loop should explicitly exclude or only coarsely represent several important populations and conditions: vehicle-less households, people needing intensive mobility assistance, tourists and transient populations, medically fragile institutional residents, complex school pickup dynamics, non-English warning comprehension, and cross-county mutual-aid dynamics. Geography should initially be limited to one California case and synthetic networks; it should not claim transfer to Hawaii, the Pacific Northwest, or international WUI settings in loop one. Failure coverage should also exclude deep structure-to-structure ignition dynamics, live responder improvisation beyond simple traffic-control actions, detailed communications infrastructure outages, and real-time active-fire forecasting. These exclusions are acceptable for loop one only if they are plainly reported and tied to a narrow claim.",
+  "why_now": "Several changes since 2020 make the problem more tractable now than a decade ago. Open wildfire and traffic tooling is easier to access and document. The WUI verification protocol now exists. NIST's Camp Fire and ESCAPE publications provide unusually concrete life-safety failure mechanisms and planning metrics. Recent work continues to add behavior, smoke, and transport evidence, while compute and open-data access make large equal-budget experiments easier for a solo researcher. The key reason it is 'now' rather than 'later' is not model novelty; it is that the public benchmark ingredients are finally good enough to test the adversarial-search thesis without pretending to deploy a live operational system.",
+  "hidden_dependencies_and_penalties": "Fatal dependencies remain and should be penalized upfront. If the fire-arrival model is too crude, the discovered failure families may be simulator artifacts. If departure-time and route-choice assumptions dominate the outcome, search may optimize weak sociology rather than robust bottlenecks. If the case-study plan geometry, zone release logic, or institutional demand are unavailable, the experiment degrades into generic traffic stress tests. If cross-model checks reverse the rankings, intervention claims should be vetoed. If the compute budget is so large that only the adaptive method can be tuned properly, the equal-budget claim fails. If no identifiable actor can use a resulting intervention card, translation value falls sharply even when the algorithmic result is positive.",
+  "falsifiable_hypothesis": "Predeclare the following hypothesis: under the same budget of expensive full simulations, a transparent plausibility-constrained adaptive search built from cross-entropy updates plus quality-diversity archiving will outperform the strongest non-adaptive baseline by at least 25% on plausibility-adjusted severe-failure yield per 1,000 valid full simulations, and by at least 2 additional causal failure families on average, across the golden worlds and one Paradise-Magalia-style case. A second clause should be tested only if the first passes: at least one intervention chosen from adaptive-search certificates reduces held-out tail risk by at least 15% without worsening the worst-served zone by more than 2%.",
+  "strongest_baselines": "The baseline ladder should be stronger than ordinary random search. Include: exhaustive enumeration on tiny golden worlds; crude Monte Carlo under the base distribution; stratified or Latin-hypercube sampling; Sobol or quasi-random sampling; historical replay and small distortions of historical conditions; expert-authored edge-case scenarios; pure cross-entropy or adaptive importance sampling without diversity maintenance; and a 'single-objective worst clearance time' search that ignores causal diversity. For the intervention phase, include best intervention chosen from random scenarios, best intervention under average clearance time, and expert-picked intervention. All methods must spend the same counted budget of valid expensive simulations and must report invalid proposal rate separately.",
+  "experiment_protocol": {
+    "scope": "Two-stage protocol. Stage A uses deterministic golden worlds with analytically known failures. Stage B uses one bounded Paradise-Magalia-style geographic case with frozen network, zone logic, scenario envelope, and intervention catalog.",
+    "scenario_representation": "Typed schema spanning fire-arrival traces or parameters, warning delay and coverage, household departure-delay distributions, route-compliance parameters, background traffic, road-capacity loss, smoke regime, crash or stall events, institutional loading demand, and assisted-evacuation capacity. Every field must carry units, range, provenance, and whether it is directly searched or derived.",
+    "plausibility_rules": "Use hard compatibility constraints first, soft likelihood weights second. Hard rejects cover impossible combinations such as contradictory route availability, implausible simultaneous institution states, impossible weather-fire pairings, or evacuation demand that violates frozen population accounting. Soft likelihood weights down-rank but do not forbid rare compound cases.",
+    "safety_and_equity_oracles": [
+      "unsafe-road person-minutes before fire arrival",
+      "loss of every safe path for any zone or protected cohort",
+      "fire overtakes queue or trapped subqueue on an exposed segment",
+      "missed zone-specific safe-egress deadline",
+      "emergency-access obstruction on declared responder corridors",
+      "worst-zone tail-risk and conditional-value-at-risk metrics",
+      "assisted-evacuation overload or refuge-capacity failure"
+    ],
+    "adaptive_methods": [
+      "Cross-entropy rare-event search over the base scenario distribution",
+      "MAP-Elites-style quality-diversity archive over failure descriptors such as first failed corridor, affected zone, institution involvement, smoke regime, and failure mechanism",
+      "Optional hybrid where cross-entropy proposes candidates and the archive preserves family diversity"
+    ],
+    "failure_descriptors_for_qd": [
+      "first corridor or junction that becomes unsafe",
+      "zone or cohort first losing safe egress",
+      "presence of institution or assisted-evacuation overload",
+      "warning-timing regime",
+      "smoke or visibility regime",
+      "capacity-loss mechanism"
+    ],
+    "budgets": {
+      "golden_worlds": "Enumerate completely where possible; otherwise cap each method at 5,000 valid full simulations per world.",
+      "geographic_case": "Freeze 20,000 valid full simulations per method for discovery, 2,000 valid held-out simulations for evaluation, and a separate replay or minimization budget counted independently.",
+      "seeds": "At least 5 random seeds per method."
+    },
+    "held_out_and_cross_model_checks": "Freeze a held-out scenario pool before intervention testing. Train or discover on one simulator stack, then replay the top failure certificates and top interventions on a smaller secondary model stack or altered fire-arrival assumptions. A repair that only survives on the generating stack is not counted as supported.",
+    "failure_replay_and_minimization": "Require seeded replay above a fixed reproduction threshold before a failure enters the archive. Then run delta-debugging or variable ablation to find a smallest sufficient cause set and store the minimized certificate as the public artifact.",
+    "intervention_phase": "Use a small frozen catalog: staged release timing, route split, traffic-control posts, emergency-only lane protection, warning-delay reduction, and assisted-capacity increase. Select interventions separately using adaptive and baseline discovery sets, then attack each chosen intervention on the unseen held-out pool.",
+    "statistics_and_outputs": "Primary metrics: plausibility-adjusted severe-failure yield, causal-family coverage, best-tail-risk found, invalid proposal rate, replay success rate, minimization size, held-out intervention tail-risk reduction, worst-zone effect, and compute per valid simulation. Publish full run tables, negative results, and rejected scenarios."
+  },
+  "success_and_kill_thresholds": {
+    "go": "GO only if the adaptive method beats the best non-adaptive baseline by at least 25% on plausibility-adjusted severe-failure yield per 1,000 valid full simulations in at least 4 of 5 seeds, discovers at least 2 extra causal families on average, maintains invalid-scenario share below 15% after warmup, and yields at least one intervention that cuts held-out tail risk by 15% or more without worsening the worst-served zone by more than 2%. Cross-model replay must preserve the sign of the intervention effect.",
+    "conditional_go": "CONDITIONAL GO if the adaptive method shows a smaller but repeatable advantage, for example 10-25% yield improvement or 1 additional causal family, but intervention robustness or cross-model stability is still incomplete. In that case, continue only as a benchmark-and-methodology project, not as a broad product build.",
+    "kill_or_no_go": "NO-GO if the best strong baseline matches the adaptive method within 10%, if most discovered failures are ruled implausible or fail replay, if minimization cannot produce understandable certificates, or if intervention rankings flip under modest model changes. Also stop if equal-budget accounting reveals that the gain comes mainly from hidden tuning or extra simulator calls."
+  },
+  "solo_30_60_day_feasibility": "A solo software researcher can plausibly execute a disciplined first loop in 30-60 days if the scope is frozen hard. Days 1-10: implement schema, constraint layer, golden worlds, oracle tests, and baseline accounting. Days 11-25: complete strong baselines and deterministic replay/minimization on golden worlds. Days 26-45: wire one geographic case and run equal-budget discovery. Days 46-60: run held-out intervention attacks, cross-model subset checks, and write the benchmark report. This is only feasible if the geographic case is simplified, the intervention catalog is tiny, and the secondary simulator check is replay-only on a subset. It is not feasible in 60 days to build a calibrated statewide platform or production operator interface.",
+  "twelve_month_proof_target": "A credible 12-month proof target is one open benchmark suite plus two case studies showing that the same benchmark protocol transfers across at least two different community topologies, with independent critique from one wildfire-evacuation researcher and one practitioner. The proof should include: published negative results, a stable certificate format, a baseline library, one supported intervention family that survives held-out attacks and cross-model checks, and a documented list of evidence gaps that materially change decisions. That would justify further investment; anything short of this should remain a bounded research artifact.",
+  "actors_and_translation_path": "Nearest adopters are not consumers but expert intermediaries: county or city emergency managers, transportation planners, wildfire consultants, state OES and CAL FIRE analysts, and academic collaborators building evacuation drills or planning studies. The workflow insertion point is pre-season planning, exercise design, after-action learning, and evidence prioritization, not live incident command. The usable outputs are failure certificates, intervention cards, scenario-coverage reports, and 'highest decision value data to collect next' memos.",
+  "strongest_rejection_argument": "The strongest rejection case is that wildfire-evacuation decisions are already dominated by simpler bottleneck analyses, trigger buffers, institutional planning, and uncertain human behavior, so adversarial search mainly adds computational theater. If the severe failures it finds are mostly consequences of debatable departure-time assumptions or fire-arrival modeling noise, then the method may look novel while contributing little beyond what a strong planner or a trigger-buffer model already knows.",
+  "evidence_that_changes_decision": "Evidence that would raise the ranking: a clean win over strong equal-budget baselines on golden worlds and the first real case; independent reproduction by another group; practitioner confirmation that minimized certificates are legible and decision-relevant; and cross-model agreement on intervention direction. Evidence that would lower or reverse the ranking: parity with stratified or cross-entropy baselines, high invalid-scenario rates, instability under replay, intervention reversals under alternate model stacks, or proof that a simpler trigger-plus-capacity workflow answers the same decisions with far less complexity.",
+  "go_no_go_assessment": {
+    "judgment": "CONDITIONAL GO",
+    "rationale": "There is still a real residual contribution, but only for a narrow benchmark-first research program. Existing systems already cover coupled simulation, trigger timing, and operational zone management. The differentiated claim survives only if Firescape proves that open adversarial search plus certificate extraction plus intervention retest beats strong equal-budget baselines and produces more decision-ready evidence than ordinary scenario sets.",
+    "scores_0_to_5": {
+      "importance": 5,
+      "leverage": 4,
+      "neglectedness": 3,
+      "tractability": 3,
+      "accessibility": 3,
+      "marginal_contribution": 4,
+      "translation": 3,
+      "evidence_confidence": 3
+    },
+    "what_this_means": "Proceed with FIRE-R002 through FIRE-R008 as a frozen research benchmark. Do not build statewide infrastructure, polished product UX, or broad hazard generalization before the first superiority test and held-out intervention test pass."
+  },
+  "sources": [
+    {
+      "title": "NIST Investigation of the 2018 Camp Fire",
+      "url": "https://www.nist.gov/programs-projects/wildland-urban-interface-wui-fire-data-collection-parcel-vulnerabilities/nist",
+      "date": "updated 2026-07-21",
+      "source_type": "official government project page",
+      "claim_supported": "Camp Fire scale, fatalities, destroyed structures, multi-year federal-state research program, and authoritative publication trail."
+    },
+    {
+      "title": "Life Safety During the Camp Fire",
+      "url": "https://www.nist.gov/programs-projects/wildland-urban-interface-wui-fire-data-collection-parcel-vulnerabilities/nist/life",
+      "date": "accessed 2026-08-09",
+      "source_type": "official government project page",
+      "claim_supported": "40,000-person evacuation, gridlock, route failure, burnover events, and no-safe-egress mechanisms."
+    },
+    {
+      "title": "WUI Fire Evacuation and Sheltering Considerations: Assessment, Planning, and Execution (ESCAPE)",
+      "url": "https://www.nist.gov/programs-projects/wildland-urban-interface-wui-fire-data-collection-parcel-vulnerabilities/escape",
+      "date": "accessed 2026-08-09",
+      "source_type": "official government project page",
+      "claim_supported": "Need for planning metrics beyond simple evacuation, temporary refuge concepts, and modern low-notice wildfire constraints."
+    },
+    {
+      "title": "The verification of wildland-urban interface fire evacuation models",
+      "url": "https://doi.org/10.1007/s11069-023-05913-2",
+      "date": "2023-03-28",
+      "source_type": "peer-reviewed paper",
+      "claim_supported": "24-test verification protocol, lack of prior standardized WUI verification, multi-layer credibility issues, and cost estimate reference."
+    },
+    {
+      "title": "WUI-NITY 4: An Industry-Ready WUI Fire Evacuation Model",
+      "url": "https://portal.research.lu.se/files/224899975/WUI-NITY4.pdf",
+      "date": "2024-10",
+      "source_type": "technical report",
+      "claim_supported": "Active open wildfire-evacuation platform lineage and current maturity of coupled evacuation modeling."
+    },
+    {
+      "title": "The simulation of wildland-urban interface fire evacuation: The WUI-NITY platform",
+      "url": "https://doi.org/10.1016/J.SSCI.2020.105145",
+      "date": "2021",
+      "source_type": "peer-reviewed paper",
+      "claim_supported": "Existence of an open coupled platform and prior art that already combines wildfire and evacuation layers."
+    },
+    {
+      "title": "Evac",
+      "url": "https://www.ladris.com/products/evacuation",
+      "date": "accessed 2026-08-09",
+      "source_type": "official product page",
+      "claim_supported": "Commercial evacuation simulation and optimization capability for planning and active disasters."
+    },
+    {
+      "title": "Genasys Protect",
+      "url": "https://genasys.com/genasys-protect/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official product page",
+      "claim_supported": "Commercial zone-based evacuation updates, facility updates, and traffic-model positioning."
+    },
+    {
+      "title": "ELMFIRE documentation",
+      "url": "https://elmfire.io/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official documentation",
+      "claim_supported": "Open-source fire-spread model with reconstruction and validation workflows."
+    },
+    {
+      "title": "ForeFire Documentation",
+      "url": "https://forefire.readthedocs.io/en/latest/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official documentation",
+      "claim_supported": "Modern open wildfire simulation engine option for secondary or alternative fire modeling."
+    },
+    {
+      "title": "Cell2Fire: A Cell Based Forest Fire Growth Model C++/Python",
+      "url": "https://github.com/cell2fire/Cell2Fire",
+      "date": "accessed 2026-08-09",
+      "source_type": "official source repository",
+      "claim_supported": "Research-use open fire simulator with batch and statistical capabilities."
+    },
+    {
+      "title": "SUMO Documentation",
+      "url": "https://sumo.dlr.de/docs/index.html",
+      "date": "accessed 2026-08-09",
+      "source_type": "official documentation",
+      "claim_supported": "Open microscopic intermodal traffic simulator suitable for scripted evacuation experiments."
+    },
+    {
+      "title": "MATSim Documentation",
+      "url": "https://matsim.org/docs/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official documentation",
+      "claim_supported": "Authoritative open multi-agent transport framework suitable for secondary checks."
+    },
+    {
+      "title": "Performance Measurement System (PeMS) Data Source",
+      "url": "https://dot.ca.gov/programs/traffic-operations/mpr/pems-source",
+      "date": "accessed 2026-08-09",
+      "source_type": "official government data page",
+      "claim_supported": "California traffic detector coverage and historical archive availability."
+    },
+    {
+      "title": "3D Elevation Program",
+      "url": "https://www.usgs.gov/3d-elevation-program",
+      "date": "accessed 2026-08-09",
+      "source_type": "official government data page",
+      "claim_supported": "Free topographic and lidar-derived elevation products for terrain modeling."
+    },
+    {
+      "title": "NOAA High-Resolution Rapid Refresh (HRRR) Model",
+      "url": "https://registry.opendata.aws/noaa-hrrr-pds/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official open-data registry page",
+      "claim_supported": "Open 3 km hourly weather archive and permissive public-data access."
+    },
+    {
+      "title": "LEHD Data",
+      "url": "https://lehd.ces.census.gov/data/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official government data page",
+      "claim_supported": "Public LODES and related employment-flow data for demand approximation."
+    },
+    {
+      "title": "Scalable End-to-End Autonomous Vehicle Testing via Rare-event Simulation",
+      "url": "https://arxiv.org/abs/1811.00145",
+      "date": "2018-10-31",
+      "source_type": "research paper",
+      "claim_supported": "Adaptive importance sampling can accelerate rare-event discovery over naive Monte Carlo under fixed simulation budgets."
+    },
+    {
+      "title": "Adaptive Stress Testing for Autonomous Vehicles",
+      "url": "https://arxiv.org/abs/1902.01909",
+      "date": "2019-02-05",
+      "source_type": "research paper",
+      "claim_supported": "AST frames failure discovery as a search problem and shows simulator-efficient discovery of more likely failures than weaker search."
+    },
+    {
+      "title": "The Cross-Entropy Method for Estimation",
+      "url": "https://web.stanford.edu/~glynn/papers/2013/KroeseRubinsteinG13.pdf",
+      "date": "2013",
+      "source_type": "tutorial chapter",
+      "claim_supported": "Rare-event estimation and importance-sampling rationale for cross-entropy baselines and adaptive search."
+    },
+    {
+      "title": "Quality Diversity Algorithms",
+      "url": "https://members.loria.fr/jbmouret/qd.html",
+      "date": "accessed 2026-08-09",
+      "source_type": "research group overview",
+      "claim_supported": "MAP-Elites-style quality-diversity is straightforward and useful for preserving many high-performing, behaviorally diverse solutions."
+    },
+    {
+      "title": "WUIVAC: a wildland-urban interface evacuation trigger model applied in strategic wildfire scenarios",
+      "url": "https://doi.org/10.1007/s11069-006-9032-y",
+      "date": "2007",
+      "source_type": "peer-reviewed paper",
+      "claim_supported": "Prior art on trigger buffers and strategic evacuation timing using fuels, weather, and topography."
+    },
+    {
+      "title": "Setting Wildfire Evacuation Triggers by Coupling Fire and Traffic Simulation Models: A Spatiotemporal GIS Approach",
+      "url": "https://doi.org/10.1007/s10694-018-0771-6",
+      "date": "2018",
+      "source_type": "peer-reviewed paper",
+      "claim_supported": "Prior art on coupled fire-traffic trigger timing and probabilistic trigger buffers."
+    },
+    {
+      "title": "A Bayesian agent-based model and software for wildfire safe evacuation planning and management",
+      "url": "https://doi.org/10.1177/1748006X241259215",
+      "date": "2024-07-26",
+      "source_type": "peer-reviewed paper",
+      "claim_supported": "WiSE as a recent integrated fire-behavior-traffic safe-egress framework and proof that integrated planning systems already exist."
+    },
+    {
+      "title": "Characterizing and Predicting Wildfire Evacuation Behavior: A Dual-Stage ML Approach",
+      "url": "https://arxiv.org/abs/2603.02223",
+      "date": "2026-02-10",
+      "source_type": "research paper",
+      "claim_supported": "Recent evidence that evacuation timing remains behaviorally difficult to predict, reinforcing uncertainty limits."
+    },
+    {
+      "title": "Macroscopic Traffic Flow Network Modeling For Wildfire Evacuation: A Game-Theoretic Junction Optimization Approach with Application to Lahaina Fire",
+      "url": "https://arxiv.org/abs/2603.29055",
+      "date": "2026-03-30",
+      "source_type": "research paper",
+      "claim_supported": "Recent active work on wildfire-evacuation optimization and the importance of lane-capacity bottlenecks and contraflow."
+    },
+    {
+      "title": "Conformal Risk Control for Safety-Critical Wildfire Evacuation Mapping: A Comparative Study of Tabular, Spatial, and Graph-Based Models",
+      "url": "https://arxiv.org/html/2603.22331v1",
+      "date": "2026-03-20",
+      "source_type": "research paper",
+      "claim_supported": "Recent evidence that safety-critical wildfire prediction needs explicit false-negative controls and that standard thresholds can be unsafe."
+    }
+  ],
+  "uncertain": [
+    "publication_and_group_attention_since_2020",
+    "funding_commercial_and_government_activity",
+    "benchmark_and_open_source_maturity",
+    "public_data_and_ground_truth",
+    "recommended_technical_stack"
+  ]
+}

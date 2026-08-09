@@ -1,0 +1,239 @@
+{
+  "research_object": "Public-data benchmark and simulator stack for a Paradise-Magalia wildfire evacuation experiment that couples open wildfire spread modeling, public road-network data, and open traffic simulation.",
+  "real_world_harm_and_scale": "The target harm is civilian death, burnover exposure, failed evacuation, and delayed rescue during fast-moving wildland-urban interface fires. In the Camp Fire on November 8, 2018, the communities of Concow, Paradise, and Magalia were rapidly impacted; NIST reports 85 fatalities, more than 18,000 destroyed structures, more than 2,200 fire observations for the progression reconstruction, and more than 2,600 notification/evacuation/traffic/temporary-refuge-area observations for life-safety reconstruction. The NETTRA report states that about 40,000 people evacuated, 31 temporary refuge areas were used by more than 1,200 civilians, and 198 rescue or evacuation-assistance events involved at least 1,000 civilians. Later California cases show the traffic problem generalizes beyond Paradise: Sonoma County's 2019 Kincade Fire after-action report says more than 186,000 residents evacuated at peak; the 2020 Glass Fire traffic paper analyzes freeway disruption during evacuation; the 2025 Silverado paper reports nearly 100,000 people were ordered to evacuate. The practical scale is therefore not a niche single-town issue but a recurring California mass-evacuation problem in which route capacity, closure timing, and departure timing interact with fire progression.",
+  "causal_path_to_harm_reduction": "A usable causal chain is: better public benchmark and calibrated open simulator stack -> more credible pre-season comparison of staged-zone releases, route controls, closure policies, and temporary-refuge-area placement -> improved county and fire-agency plans, drills, and trigger thresholds -> faster and less conflicted evacuations under comparable future fires -> lower trapped-vehicle minutes, fewer burnovers, fewer ad hoc rescues, and lower fatality risk. The technical intervention is not 'predict every household perfectly'; it is narrowing the decision space for planners by ruling out obviously bad release orders and by quantifying which uncertainties matter most before a real incident.",
+  "exact_bottleneck": "The bottleneck is assembling a reproducible end-to-end public loop that turns publicly available fire, hazard, road, zone, and demographic data into a coupled fire-traffic replay for Paradise-Magalia with an empirical validation ladder. Existing components are individually available, but the hard part is the seam: aligning fire-arrival-time evidence to a road graph, mapping evacuation zones to demand buckets, converting fire effects into link penalties and closures, and validating outputs against real wildfire traffic data instead of generic highway-capacity assumptions.",
+  "decision_or_capability_changed": "This research should decide whether one software researcher can build a credible open benchmark and baseline stack for Paradise-Magalia in 30 to 60 days, with enough empirical grounding to justify a larger translation effort. The changed capability would be an auditable replay-and-policy-comparison harness rather than a polished operational decision-support product.",
+  "closest_systems_and_attempts": "Closest fire simulators: ELMFIRE with the Berkeley Fire Lab Wildland-Urban Extension, ForeFire, Cell2Fire and its more actively maintained C2FK fork, and PyTorchFire. Closest evacuation couplers: WUI-NITY/PREACT, which explicitly couples wildfire, pedestrian, and traffic layers; SUMO/libsumo and MATSim, which provide the traffic side but not wildfire physics; and the 2020 Paradise/Mill Valley 'Simulation Pipeline for Traffic Evacuation in Urban Areas' paper, which used an interactive traffic simulation pipeline for California wildfire-risk cities. Closest empirical validation work: NIST's Camp Fire progression and NETTRA reconstructions, plus empirical traffic studies for the 2019 Kincade Fire, 2020 Glass Fire, and 2020 Silverado Fire. Exact overlap remains limited because no inspected source provided a public, versioned Paradise benchmark that already bundles open fire progression, open evacuation-zone demand, and a validated open traffic-coupling pipeline.",
+  "publication_and_group_attention_since_2020": "[uncertain] Attention since 2020 is real but fragmented across separate communities rather than concentrated in one dominant benchmark ecosystem. Fire-side work includes the 2021 NIST Camp Fire progression report, the 2023 NIST NETTRA report, the 2021 Cell2Fire paper, the 2025 PyTorchFire paper, and the 2026 FireDataForge paper. Evacuation-side work includes the 2020 WUI-NITY platform paper, the 2023 Kincade traffic paper, the 2023 Glass traffic paper, the 2025 Silverado traffic paper, and recent staged-evacuation work built on MATSim. Active groups include NIST, Berkeley Fire Research Lab, CNRS/ForeFire, WUI-NITY/PREACT authors, Lund/RMIT/NRC wildfire-evacuation traffic researchers, and MATSim/SUMO communities. The pattern is enough activity to support a first loop, but not enough standardization to treat the problem as benchmark-saturated.",
+  "funding_commercial_and_government_activity": "Government and quasi-public activity is substantial. NIST invested in a multi-report Camp Fire case study and released public supporting data. CAL FIRE FRAP and OSFM maintain statewide fire perimeter and hazard data. Butte County states that it received a California Department of Housing and Community Development grant in 2021 and hired a transportation consulting firm in 2022 to produce evacuation modeling scenarios and community evacuation maps. Caltrans maintains PeMS and funds evacuation-route research through DRISI and related reports. NFPA's Fire Protection Research Foundation has published WUI-NITY project material. Commercial/open operational signals exist but are narrower: ELMFIRE is used operationally in the Pyrecast project and was built by Chris Lautenberger/CloudFire with Berkeley Fire Lab extensions, but there is no evidence in the inspected material of a broad commercial market already solved by an open Paradise-grade benchmark.",
+  "benchmark_and_open_source_maturity": "[uncertain] Open-source maturity is uneven. SUMO/libsumo is very mature, broadly documented, versioned, and widely used. MATSim is mature as a transport framework but requires substantial user code and scenario building. ELMFIRE appears mature enough for operational forecasting and has versioned releases and tutorials. ForeFire is open, documented, MPI-capable, and flexible, but it is a heavier research engine. Cell2Fire is open and usable, but its own repository points users to a more actively maintained fork, which is a maintenance warning. WUI-NITY/PREACT is unusually close to the target use case, but the stack is conceptually broad and carries disclaimers about use for real decisions. PyTorchFire is promising and fast but young. The ecosystem is therefore mature enough to build a benchmark, but not mature enough to inherit a ready-made Paradise reproducibility standard.",
+  "residual_contribution": "The real residual contribution is not inventing another fire or traffic model. It is packaging a versioned Paradise-Magalia benchmark with public input data, public preprocessing steps, a documented coupling contract between fire and traffic layers, baseline policies, and a validation ladder tied to Camp Fire evidence and cross-checked against Kincade/Glass/Silverado traffic changes. That would fill a reproducibility and validation gap that current projects leave open.",
+  "why_little_attention": "Reasons for lower attention are mostly structural. Fire modelers, transport modelers, and emergency-management practitioners work on different data, tooling, and publication norms. County evacuation operations are highly local, and public release of detailed operational logs, household movement traces, and law-enforcement actions is uncommon. Liability pressure discourages strong claims, which is visible in WUI-NITY/PREACT disclaimers. The work also has a high preprocessing tax because fuels, weather, topography, roads, zones, and demand assumptions must be harmonized. These are partly opportunity signals because they favor integration-focused work, but they are also warnings because they imply the benchmark may stall on missing ground truth rather than on missing algorithms.",
+  "public_data_and_ground_truth": "[uncertain] Strong public inputs exist, but they are heterogeneous. CAL FIRE FRAP publishes annual historical fire perimeters and says the statewide perimeter GIS is released each April. OSFM's Fire Hazard Severity Zone material explains that FHSZ maps are hazard maps, not risk maps; the California Open Data listing indicates the current viewer includes SRA data effective April 1, 2024 and LRA recommendations dated March 24, 2025. NIST's Camp Fire data support is unusually valuable: the Data.gov entry says the public Appendix F spreadsheet contains more than 2,200 geolocated, time-stamped fire observations, while NIST TN 2252 adds more than 2,600 NETTRA observations covering notifications, traffic, rescues, and temporary refuge areas. Butte County publicly posts community evacuation maps and a live zone map, and states these were informed by 2022 traffic-flow modeling work, but the machine-readable export path and redistribution terms were not confirmed from the inspected pages. OpenStreetMap provides public road geometry under ODbL and is importable into SUMO, but local lane counts, turn-channel details, intersection control logic, and incident-era closure states may need manual repair. U.S. Census and ACS products provide population, age, housing, and household context; for example, Paradise QuickFacts reports 26,218 residents in the 2010 Census and 4,764 residents in the 2020 Census after the Camp Fire. Caltrans PeMS is a strong public source for freeway traffic validation and underlies the Kincade/Glass/Silverado studies, but it does not directly instrument most Paradise ridge-road links. NOAA HRRR/NCEI and LANDFIRE-style fuel/land-cover products can support weather and fuel layers. Missing or weak public data include household-level departure traces for Paradise, official per-link closure timestamps for every local road, incident-command traffic-control actions, special-needs evacuation demand, and reliable local-road flow sensors during the Camp Fire itself.",
+  "simulator_and_tool_options": "[uncertain] ELMFIRE is the strongest open fire baseline for this task because it is operational, open under EPL-2.0, has tutorials for real-world fuel and terrain, and has an adjacent Berkeley Fire Lab Wildland-Urban Extension. Cell2Fire is lighter-weight, open under GPL-3.0, supports large numbers of grid simulations with parallel computation, and is useful for scenario sweeps, but its repository explicitly redirects users toward C2FK for more active maintenance and it is less clearly aligned with California WUI route-closure replay. ForeFire is powerful and flexible: C++ core, MPI support, NetCDF handling, Python bindings, HTTP interface, Docker quick start, and research/forecasting applications. Its tradeoff is higher setup and preprocessing burden than a solo first loop needs. PyTorchFire is attractive for later experimentation because it is open-access, pip-installable, GPU-accelerated, differentiable, and designed for calibration, but it is newer and has a lighter validation track record than ELMFIRE. WUI-NITY/PREACT is the closest conceptual match because it couples wildfire, pedestrian, and traffic movement; however, the inspected materials show a broad platform with Unity visualization history, PREACT core/CLI separation, strong disclaimers, and more platform surface area than is ideal for a rapid benchmark build. SUMO/libsumo is the strongest open traffic engine for the first loop: current official release 1.27.1, EPL-2.0 with GPL secondary licensing conditions, OSM import, pedestrians, TraCI/libsumo APIs, and large scenario support. MATSim 2026.0 is also strong and open, but its own installation guide says users usually need to write code and obtain network plus demand inputs themselves, which makes it a better second-stage robustness check than a first-stage baseline.",
+  "recommended_technical_stack": "[uncertain] Recommended first-loop stack: Python 3.12 orchestration; ELMFIRE 2025.0212 as the fire engine baseline; SUMO/libsumo 1.27.1 as the traffic engine; GeoPandas/Shapely/Rasterio plus OSMnx or direct SUMO import tools for preprocessing; NIST TN 2135 fire observations and NIST TN 2252 NETTRA evidence as the empirical oracle; Butte County zone maps plus Paradise/Magalia demographic aggregates as demand buckets; and Caltrans-derived wildfire traffic parameter changes from Kincade, Glass, and Silverado as external sanity bounds for traffic behavior under evacuation. Coupling contract: the fire layer outputs time-indexed road-exposure states by segment or by raster-to-link join (for example, open, slowed, blocked, high-radiant-exposure proxy), plus zone trigger times; the traffic layer consumes those states as time-varying edge penalties, closures, and release triggers. Keep demand deliberately coarse in v1: staged zone release curves, not household-level behavioral realism. Exclude MATSim, WUI-NITY/PREACT, ForeFire, and PyTorchFire from the required first loop; treat them as comparison or follow-on systems after the benchmark exists.",
+  "repeated_unresolved_limitations": "Across the inspected literature and tooling, the same limitations recur: wildfire evacuation traffic models are calibration-poor; route capacity under fire and smoke is not the same as routine capacity; household departure timing is hard to observe; closure timing and law-enforcement control actions are often incomplete in public data; and coupled tools carry disclaimers against direct operational substitution. The Kincade, Glass, and Silverado papers all reinforce that emergency traffic changes the speed-flow-density relationship and that generic routine assumptions are not enough. Tool-side limitations repeat as well: WUI-specific couplers are broad but heavy, traffic frameworks need scenario-specific demand engineering, and fire models require expensive raster harmonization.",
+  "excluded_populations_geographies_and_failures": "Current public work and the proposed first loop both under-cover non-drivers, institutional populations, medically fragile residents, households with trailers or large animals, evacuees without phone/power connectivity, tourists, and people who refuse or delay evacuation. Geographically, a Paradise-Magalia first loop will not immediately generalize to coastal canyon systems, dense freeway-dependent suburbs, or places with formal contra-flow plans. Operational failures likely to remain weakly modeled include ad hoc temporary refuge area creation, firefighter-directed reverse movements, communications outages, smoke-only visibility degradation without direct flame contact, and intersection-management improvisation by officers on the ground.",
+  "why_now": "Tractability is better now than it was even a few years ago. Since 2021, NIST has published detailed Camp Fire progression and life-safety reconstructions plus a public supporting dataset. Butte County now has post-Camp-Fire community evacuation maps and zone infrastructure shaped by 2021 to 2022 planning work. SUMO remains actively released and mature, with official 1.27.1 downloads visible on August 9, 2026. MATSim has a 2026.0 stable release. ELMFIRE has a modern public documentation site and versioned releases. PyTorchFire and FireDataForge indicate that wildfire data retrieval and rapid calibration are improving. The empirical traffic literature also advanced after Camp Fire, giving public Kincade, Glass, and Silverado findings that can bound evacuation traffic assumptions rather than relying entirely on hurricane-era or generic HCM relationships.",
+  "hidden_dependencies_and_penalties": "The main hidden dependency is not raw code but missing operational truth. A benchmark can be built without private data, but credible policy claims depend heavily on zone definitions, departure timing assumptions, road-control actions, and special-population demand that are only partly public. There is also a licensing/redistribution penalty: OSM's ODbL is manageable but imposes share-alike obligations on adapted databases, and county evacuation-zone redistribution terms were not confirmed. A preprocessing penalty is substantial because fire, weather, road, and demographic layers arrive in different resolutions, coordinate systems, and update cadences. A translation penalty is also high: even a good benchmark may change academic understanding faster than county practice unless its outputs fit planning workflows.",
+  "falsifiable_hypothesis": "Using only public data, a coupled ELMFIRE plus SUMO benchmark can reproduce the broad first-3-hour Camp Fire clearance and blockage chronology well enough to rank staged evacuation-zone policies more credibly than a traffic-only routine-capacity baseline. A concrete falsifiable version is: at least one staged-zone policy will reduce exposed vehicle-minutes by 15% or more relative to a simultaneous-release baseline while keeping total modeled clearance time within 10% of the best simultaneous-release case under the same demand assumptions.",
+  "strongest_baselines": "Baseline 1: traffic-only SUMO/libsumo with all-at-once zone release and routine-capacity assumptions. Baseline 2: traffic-only SUMO/libsumo with wildfire-adjusted speed/capacity curves taken from the Kincade, Glass, and Silverado literature but without dynamic fire closures. Baseline 3: ELMFIRE plus SUMO simultaneous-release coupling with no staged policy optimization. Baseline 4: a Cell2Fire plus SUMO variant for cheaper fire-side scenario sweeps. Baseline 5: if time permits, a WUI-NITY/PREACT-style conceptual comparison or a MATSim staged-evacuation replication on a reduced network to test whether the chosen stack is missing a material behavioral effect.",
+  "experiment_protocol": "Primary scenario: replay November 8, 2018 for Paradise and Magalia over the first 180 minutes after ignition. Inputs: NIST TN 2135 fire observations, NIST TN 2252 NETTRA observations, Butte County evacuation zones/maps, OSM road graph, Paradise/Magalia demographic aggregates, FRAP perimeters/FHSZ context, and public weather/fuel layers required by the chosen fire engine. Step 1 validates geometry and timestamps: all source layers aligned to one spatial reference and one minute-based simulation clock. Step 2 validates the traffic side alone using public wildfire traffic literature ranges: the implemented speed-flow-density relationships should be able to express Kincade-like, Glass-like, and Silverado-like reductions. Step 3 replays Camp Fire with dynamic closures and zone releases to check whether major observed route failures, standstills, and temporary refuge area pressures occur in roughly the right time order. Step 4 compares a small policy set: simultaneous evacuation, current-zone-order proxy, north-to-south staging, and risk-triggered staging. Use at least 20 stochastic seeds per policy for demand jitter and departure-time uncertainty. Publish artifacts as versioned configs, preprocessing scripts, derived network files, event logs, and evaluation notebooks.",
+  "success_and_kill_thresholds": "[uncertain] Go threshold: the benchmark ingests all mandatory public layers without bespoke proprietary inputs; the Camp Fire replay reproduces at least 70% of predeclared milestone orderings and keeps most key milestone timestamps within plus or minus 15 minutes; and policy rankings are directionally stable under plausible demand perturbations. Downgrade threshold: the stack runs end to end but rankings flip under small demand changes or closure assumptions, implying use only as a sensitivity-analysis harness. Kill threshold: either the zone/closure/demand data cannot be turned into a coherent replay, or the replay cannot beat a crude traffic-only baseline in explanatory power despite substantial calibration effort.",
+  "solo_30_60_day_feasibility": "[uncertain] This is feasible for one software researcher if the goal is a benchmark and baseline stack, not an operational planner dashboard. A realistic 30-day scope is: ingest the public data, build the road graph, stand up SUMO/libsumo, implement a coarse closure adapter, and produce a traffic-only plus coarse-coupled replay. A realistic 60-day scope is: refine ELMFIRE inputs, replay Camp Fire milestones, add staged-policy comparisons, and document the validation ladder. Compute requirements are moderate if ELMFIRE plus SUMO are used without GPU training; a modern workstation or laptop with 16 to 32 GB RAM should be enough for the first loop. Time risk is dominated by data cleaning and coupling bugs rather than raw simulation runtime.",
+  "twelve_month_proof_target": "If the first gate passes, a credible 12-month target is a public 'Firescape Paradise Benchmark v1' plus a methods paper or technical report showing: open preprocessing from public sources, validated fire-traffic coupling on Camp Fire, cross-case traffic sanity checks using Kincade/Glass/Silverado, and at least one planner-relevant finding about staged releases, route vulnerability, or temporary refuge dependence. A stronger translation target would add one or two additional California case-study geographies and a simple scenario explorer for emergency-planning workshops.",
+  "actors_and_translation_path": "Potential adopters are county emergency managers, CAL FIRE unit planners, evacuation consultants, Fire Safe Councils, transportation researchers, and resilience nonprofits. The insertion point is pre-season planning and exercise design, not live incident command. Useful outputs are zone-release comparisons, bottleneck maps, road segments whose failure dominates clearance time, uncertainty intervals on clearance under different demand assumptions, and candidate temporary-refuge-area stress points.",
+  "strongest_rejection_argument": "The best rejection case is that the benchmark will be precise-looking but behaviorally underdetermined. If household departures, informal communications, officer control, and ad hoc refuge behavior drive outcomes more than solver choice does, then a public-data coupled model may mostly tell a tidy story about an untidy event and offer little trustworthy decision leverage. In that case, the work could become an integration exercise with weak practical translation.",
+  "evidence_that_changes_decision": "[uncertain] Evidence that would sharply raise confidence: machine-readable Butte evacuation-zone boundaries with clear reuse terms; official local-road closure logs for November 8, 2018; observed Paradise-area vehicle traces or better local count data; direct confirmation that ELMFIRE inputs can be built cleanly for the ridge from public sources; or a county/planner partner willing to evaluate outputs. Evidence that would lower confidence: inability to obtain coherent zone geometry, strong dependence on nonpublic command decisions, or repeated failure of the coupled replay to improve on a simple traffic-only explanation.",
+  "go_no_go_assessment": "[uncertain] CONDITIONAL GO. Importance: 9/10 because the harm is severe and recurring. Leverage: 7/10 because better pre-season policy comparison could change real plans. Neglectedness: 6/10 because pieces are active, but the open benchmark seam is still underserved. Tractability: 6/10 because the first loop is feasible but the uncertainty tax is high. Accessibility: 8/10 because most required inputs and engines are public. Marginal contribution: 7/10 because a reproducible benchmark would be a real addition. Translation: 5/10 because adoption into county workflow is uncertain. Evidence confidence: 6/10 because Camp Fire evidence is unusually good, but behavior and local closure truth remain incomplete. Recommended action: build the 30- to 60-day benchmark only if the explicit goal is an evidence artifact that can fail fast, not a claim of operational readiness.",
+  "sources": [
+    {
+      "title": "A Case Study of the Camp Fire - Notification, Evacuation, Traffic, and Temporary Refuge Areas (NETTRA)",
+      "url": "https://www.nist.gov/publications/case-study-camp-fire-notification-evacuation-traffic-and-temporary-refuge-areas-nettra",
+      "date": "2023-08-08",
+      "source_type": "official report landing page",
+      "claim_supported": "Camp Fire life-safety ground truth, more than 2,600 NETTRA observations, 31 temporary refuge areas, 198 rescue events."
+    },
+    {
+      "title": "A Case Study of the Camp Fire - Fire Progression Timeline",
+      "url": "https://www.nist.gov/publications/case-study-camp-fire-fire-progression-timeline",
+      "date": "2021-01-01",
+      "source_type": "official report landing page",
+      "claim_supported": "Camp Fire progression reconstruction, high winds, long-range spotting, and Paradise/Magalia impact chronology."
+    },
+    {
+      "title": "Data supporting the case study of the 2018 Camp Fire",
+      "url": "https://catalog.data.gov/dataset/data-supporting-the-case-study-of-the-2018-camp-fire",
+      "date": "2024-03-04",
+      "source_type": "government dataset catalog",
+      "claim_supported": "Public supporting dataset, more than 2,200 geolocated fire observations, public spreadsheet download."
+    },
+    {
+      "title": "Fire Perimeters | CAL FIRE FRAP",
+      "url": "https://www.fire.ca.gov/what-we-do/fire-resource-assessment-program/fire-perimeters",
+      "date": "accessed 2026-08-09",
+      "source_type": "official data program page",
+      "claim_supported": "Historical California fire perimeters are publicly distributed and released annually in April."
+    },
+    {
+      "title": "Fire Hazard Severity Zones | OSFM",
+      "url": "https://osfm.fire.ca.gov/what-we-do/community-wildfire-preparedness-and-mitigation/fire-hazard-severity-zones",
+      "date": "accessed 2026-08-09",
+      "source_type": "official hazard data page",
+      "claim_supported": "FHSZ is hazard rather than risk, with factors including fuels, terrain, flame length, embers, and weather."
+    },
+    {
+      "title": "Fire Hazard Severity Zone Viewer - Dataset - California Open Data",
+      "url": "https://data.ca.gov/dataset/fire-hazard-severity-zone-viewer1",
+      "date": "accessed 2026-08-09",
+      "source_type": "state open-data catalog",
+      "claim_supported": "Current viewer references SRA data effective April 1, 2024 and LRA recommendations dated March 24, 2025."
+    },
+    {
+      "title": "Community Evacuation Maps | Butte County, CA",
+      "url": "https://www.buttecounty.net/795/Community-Evacuation-Maps",
+      "date": "accessed 2026-08-09",
+      "source_type": "county emergency-preparedness page",
+      "claim_supported": "Butte County received a 2021 grant and used 2022 traffic-flow modeling to produce community evacuation maps."
+    },
+    {
+      "title": "Know Your Zone | Butte County, CA",
+      "url": "https://www.buttecounty.net/1498/Know-Your-Zone",
+      "date": "accessed 2026-08-09",
+      "source_type": "county live map page",
+      "claim_supported": "Public evacuation zone map exists for Butte County and is part of current resident-facing planning."
+    },
+    {
+      "title": "U.S. Census Bureau QuickFacts: Paradise town, California",
+      "url": "https://www.census.gov/quickfacts/fact/table/paradisetowncalifornia/HCN010222",
+      "date": "accessed 2026-08-09",
+      "source_type": "official demographic dataset page",
+      "claim_supported": "Paradise population and age structure for demand context."
+    },
+    {
+      "title": "Performance Measurement System (PeMS) Data Source - Caltrans",
+      "url": "https://dot.ca.gov/programs/traffic-operations/mpr/pems-source",
+      "date": "accessed 2026-08-09",
+      "source_type": "official traffic-data page",
+      "claim_supported": "PeMS is a public archived and real-time California freeway traffic source used for wildfire traffic studies."
+    },
+    {
+      "title": "ELMFIRE documentation",
+      "url": "https://elmfire.io/",
+      "date": "2025.0212 docs accessed 2026-08-09",
+      "source_type": "official software documentation",
+      "claim_supported": "ELMFIRE license, use cases, installation path, and real-world fuel/terrain tutorials."
+    },
+    {
+      "title": "Software and Data - Berkeley Fire Research Lab",
+      "url": "https://firelab.berkeley.edu/software/",
+      "date": "accessed 2026-08-09",
+      "source_type": "lab software page",
+      "claim_supported": "ELMFIRE operational context and Berkeley Wildland-Urban Extension maintenance."
+    },
+    {
+      "title": "Cell2Fire GitHub repository",
+      "url": "https://github.com/cell2fire/Cell2Fire",
+      "date": "accessed 2026-08-09",
+      "source_type": "official code repository",
+      "claim_supported": "GPL-3.0 license, research-only disclaimer, parallel computation, and pointer to more actively maintained C2FK fork."
+    },
+    {
+      "title": "ForeFire GitHub repository",
+      "url": "https://github.com/forefireAPI/forefire",
+      "date": "accessed 2026-08-09",
+      "source_type": "official code repository",
+      "claim_supported": "GPL-3.0 license, MPI support, Python bindings, NetCDF handling, Docker and HTTP interfaces."
+    },
+    {
+      "title": "PyTorchFire GitHub repository",
+      "url": "https://github.com/xiazeyu/PyTorchFire",
+      "date": "accessed 2026-08-09",
+      "source_type": "official code repository",
+      "claim_supported": "pip-installable wildfire simulator with notebook examples and optional FireDataForge integration."
+    },
+    {
+      "title": "PyTorchFire: A GPU-Accelerated Wildfire Simulator with Differentiable Cellular Automata",
+      "url": "https://arxiv.org/abs/2502.18738",
+      "date": "2025-02-26",
+      "source_type": "academic preprint",
+      "claim_supported": "PyTorchFire speed, differentiable calibration, and role as a newer GPU-first wildfire engine."
+    },
+    {
+      "title": "FireDataForge: A Unified Framework for Multi-Source Wildfire Data Retrieval and Integration",
+      "url": "https://arxiv.org/abs/2606.21198",
+      "date": "2026-06-19",
+      "source_type": "academic preprint",
+      "claim_supported": "Automated harmonization of 11 wildfire-related data sources and reduction of preprocessing burden."
+    },
+    {
+      "title": "PREACT/WUI-NITY GitHub repository",
+      "url": "https://github.com/bran-jnw/wuinity",
+      "date": "accessed 2026-08-09",
+      "source_type": "official code repository",
+      "claim_supported": "GPL-3.0 licensing, wildfire-pedestrian-traffic coupling, PREACT core split, and Unity legacy."
+    },
+    {
+      "title": "The simulation of wildland-urban interface fire evacuation: the WUI-NITY platform",
+      "url": "https://nrc-publications.canada.ca/eng/view/object/?id=2a4d9ef8-0f7d-4d60-9586-aae5385a47dd",
+      "date": "2021-01-01",
+      "source_type": "academic/government publication record",
+      "claim_supported": "WUI-NITY architecture based on wildfire, pedestrian, and traffic layers and its FARSITE/LWR basis."
+    },
+    {
+      "title": "SUMO Documentation",
+      "url": "https://sumo.dlr.de/docs/index.html",
+      "date": "accessed 2026-08-09",
+      "source_type": "official software documentation",
+      "claim_supported": "SUMO license, intermodal support, scenario-creation tools, and mature documentation."
+    },
+    {
+      "title": "Eclipse SUMO home page",
+      "url": "https://eclipse.dev/sumo/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official software home page",
+      "claim_supported": "Current visible official SUMO release 1.27.1, OSM import, TraCI APIs, and project maturity."
+    },
+    {
+      "title": "MATSim home page",
+      "url": "https://matsim.org/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official software home page",
+      "claim_supported": "MATSim scope as an open-source large-scale agent-based transport simulation framework."
+    },
+    {
+      "title": "Install MATSim",
+      "url": "https://matsim.org/install/",
+      "date": "accessed 2026-08-09",
+      "source_type": "official install documentation",
+      "claim_supported": "Stable release 2026.0, Java/Maven setup burden, and suitability as a framework rather than turnkey tool."
+    },
+    {
+      "title": "Simulation Pipeline for Traffic Evacuation in Urban Areas and Emergency Traffic Management Policy Improvements through Case Studies",
+      "url": "https://arxiv.org/abs/2002.06198",
+      "date": "2020-02-14",
+      "source_type": "academic preprint",
+      "claim_supported": "Prior Paradise case-study pipeline and closest open traffic-focused attempt."
+    },
+    {
+      "title": "Traffic dynamics during the 2019 Kincade wildfire evacuation",
+      "url": "https://trid.trb.org/View/2107381",
+      "date": "2023-03-01",
+      "source_type": "abstract/index record",
+      "claim_supported": "69,116 data points from 24 locations, roughly 3.5 km/h lower speeds, and need for wildfire-specific traffic models."
+    },
+    {
+      "title": "The analysis of traffic data of wildfire evacuation: the case study of the 2020 Glass Fire",
+      "url": "https://www.nwfirescience.org/sites/default/files/publications/1-s2.0-S0379711223001777-main.pdf",
+      "date": "2023-01-01",
+      "source_type": "academic PDF",
+      "claim_supported": "Glass Fire speed and capacity reductions and relationship to Kincade findings."
+    },
+    {
+      "title": "Traffic Performance Indicators for Evacuation: The Case Study of the 2020 Silverado Wildfire",
+      "url": "https://link.springer.com/article/10.1007/s10694-025-01813-y",
+      "date": "2025-01-01",
+      "source_type": "academic article page",
+      "claim_supported": "Silverado evacuation of nearly 100,000 people and larger freeway capacity reduction during evacuation."
+    },
+    {
+      "title": "2019 Kincade Fire After Action Report - Sonoma County",
+      "url": "https://sonomacounty.gov/Main%20County%20Site/Administrative%20Support%20%26%20Fiscal%20Services/Emergency%20Management/Documents/Archive/Administration/Services/Training__3/Service%201/_Documents/Sonoma-County-2019-Kincade-Fire-AAR-FINAL-ADA.pdf",
+      "date": "2020-01-01",
+      "source_type": "county after-action report",
+      "claim_supported": "Peak evacuation scale for the Kincade Fire."
+    }
+  ],
+  "uncertain": [
+    "publication_and_group_attention_since_2020",
+    "benchmark_and_open_source_maturity",
+    "public_data_and_ground_truth",
+    "simulator_and_tool_options",
+    "recommended_technical_stack",
+    "success_and_kill_thresholds",
+    "solo_30_60_day_feasibility",
+    "evidence_that_changes_decision",
+    "go_no_go_assessment"
+  ]
+}

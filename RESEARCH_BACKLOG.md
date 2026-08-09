@@ -1,518 +1,726 @@
-# Firescape Research Backlog
+# Firescape implementation and algorithmic research backlog
 
-This backlog defines the research program required to determine whether Firescape should exist.
+**Program state:** Conditional GO
+**Gate date:** 2026-08-08
+**Current phase:** Build the smallest complete adversarial research loop
+**Decision record:** [First end-to-end research loop](research/first-loop/GATE_REPORT.md)
+**Architecture review:** [Approved with conditions](research/first-loop/ARCHITECTURE_REVIEW.md)
 
-It is not a generic software feature list. Each item should resolve an uncertainty, falsify a hypothesis, establish a baseline, or create evidence that changes the direction of the project.
+This is now an execution backlog, not an idea-validation list. The first research loop found that wildfire-evacuation simulation is active and partly commercialized, while the narrower open workflow for adversarial failure discovery, full-simulator verification, counterexample minimization, and held-out intervention attack remains a credible contribution.
 
-## Backlog rules
+The project is authorized to build and test that workflow. It is not authorized to make operational recommendations, expand statewide, or build a polished product until the scientific gates in this backlog pass.
 
-1. **Research before platform.** Do not build statewide product infrastructure before the adversarial-search hypothesis survives a controlled experiment.
-2. **Baselines before novelty claims.** Every learned or adaptive method must compete against random, stratified, historical, and expert-authored scenarios under the same full-simulation budget.
-3. **Evidence before fidelity claims.** A detailed simulator with weak inputs is still weak evidence.
-4. **Held-out attacks before intervention claims.** A repair is not robust because it fixes the scenario that produced it.
-5. **Worst-group constraints before average gains.** An intervention that improves average clearance while harming the least-served population is rejected.
-6. **Negative results are deliverables.** Failed hypotheses, simulator artifacts, and inaccessible-data findings should be published.
-7. **No actor, no priority.** High-priority applied work must connect to an identifiable planning, exercise, infrastructure, or evidence decision.
-8. **No statewide town ranking without comparable calibration.** Publish intervention opportunities and evidence states, not false-precision community league tables.
+## Program thesis
 
-## Priority definitions
+At an equal budget of expensive simulations, a plausibility-constrained quality-diversity adversary should discover more severe, reproducible, and causally distinct evacuation-plan failures than historical/analyst scenarios, random sampling, stratified extremes, Sobol sampling, and cross-entropy search. Interventions selected from those failures should then reduce held-out tail risk without worsening the worst-served group.
 
-| Priority | Meaning |
-|---|---|
-| **P0** | Required to determine whether the central research thesis is valid. Blocks scaling. |
-| **P1** | Required for credible transfer, intervention ranking, and California-wide usefulness. |
-| **P2** | Valuable after the core method works and independent users appear. |
-| **Deferred** | Explicitly excluded until a stated prerequisite changes. |
+The project succeeds only if it completes this chain:
 
-## Status definitions
+> plausible inputs → adversarial search → full simulation → verified and minimized failure → implementable intervention → independent held-out attack → robust harm reduction → identifiable planning decision
+
+## Non-negotiable rules
+
+1. **Benchmark before platform.** No statewide infrastructure, live routing, or polished dashboard before the first algorithm and intervention gates pass.
+2. **Strongest baseline wins the comparison.** The candidate is compared with CEM and Sobol, not merely random search.
+3. **Full simulators certify.** Surrogates may acquire candidates; they cannot certify failures or repairs.
+4. **Plausibility is executable.** Every material variable carries units, source, transformation, range, and compatibility constraints.
+5. **Uncertainty is an input, not a footnote.** Calibration yields an ensemble of acceptable worlds, not a single false-precision world.
+6. **Safety is disaggregated.** Average clearance cannot hide queue overtake, loss of egress, emergency-access obstruction, or subgroup harm.
+7. **Repairs face a new attacker.** The method that finds a repair cannot be the only method used to validate it.
+8. **All budgets are equal and auditable.** Count invalid proposals, full-simulator calls, retries, wall time, and preprocessing.
+9. **Negative results ship.** Saturation by simple baselines, model reversals, or data insufficiency are publishable outcomes.
+10. **No operational claims.** Firescape is research and planning evidence until external validation and governance explicitly change that status.
+
+## Status labels
 
 | Status | Meaning |
 |---|---|
-| **Proposed** | Question and experiment are defined but not yet frozen. |
-| **Ready** | Inputs, baselines, acceptance criteria, and budget are frozen. |
-| **Running** | Experiment is executing; success criteria may no longer change. |
-| **Supported** | Evidence passed the predeclared test. |
-| **Rejected** | Evidence failed the predeclared test. |
-| **Blocked** | A named dependency prevents a meaningful test. |
+| **Ready** | Contract and acceptance test are frozen; implementation can begin |
+| **Blocked** | A named prerequisite prevents meaningful work |
+| **In progress** | Work has begun; scientific thresholds may no longer change |
+| **Implemented** | Code and unit/integration tests meet the item contract |
+| **Supported** | Preregistered empirical test passed |
+| **Rejected** | Preregistered empirical test failed |
+| **Deferred** | Explicitly outside the current gate |
+
+## Locked v0 architecture
+
+```text
+firescape/
+├── pyproject.toml
+├── docker-compose.yml
+├── configs/
+│   ├── golden/
+│   └── paradise/
+├── data/
+│   ├── manifests/
+│   ├── raw/                 # ignored; fetched from manifests
+│   ├── interim/             # ignored; reproducible transforms
+│   └── fixtures/            # small redistributable test data
+├── src/firescape/
+│   ├── schemas/             # source, world, scenario, plan, run, certificate
+│   ├── provenance/          # hashes, licenses, transforms, evidence tiers
+│   ├── worlds/              # golden and California world builders
+│   ├── hazard/              # ELMFIRE adapter and hazard clock
+│   ├── traffic/             # SUMO/libsumo adapter and golden engine
+│   ├── behavior/            # explicit stochastic archetypes
+│   ├── coupling/            # edge state and exposure exchange
+│   ├── oracles/             # validity, safety, equity, operability
+│   ├── search/              # baselines, CEM, QD, later surrogates
+│   ├── certificates/        # replay, minimization, causal signatures
+│   ├── interventions/       # typed plan changes and compiler
+│   ├── evaluation/          # metrics, statistics, held-out attacks
+│   ├── registry/            # failures, experiments, result cards
+│   └── cli.py
+├── tests/
+│   ├── unit/
+│   ├── contract/
+│   ├── golden/
+│   └── integration/
+├── experiments/
+│   ├── preregistrations/
+│   └── manifests/
+└── research/
+    ├── first-loop/
+    ├── evidence/
+    └── reports/
+```
+
+The file tree is a target contract, not permission to scaffold everything at once. Each milestone creates only the modules required for its acceptance test.
+
+## Core data contracts
+
+These objects must be versioned before simulator integration.
+
+### `SourceArtifact`
+
+- stable source ID and retrieval URL;
+- publisher, retrieved-at time, geographic/time coverage;
+- content hash, license, redistribution rule;
+- raw and normalized coordinate reference systems;
+- exact transformation graph;
+- evidence tier and known limitations.
+
+### `World`
+
+- versioned road graph and edge attributes;
+- origins, safe destinations, refuge, institutions, zones;
+- population/demand ensemble;
+- traffic calibration ensemble;
+- hazard-realization references;
+- documented excluded mechanisms;
+- validation observations and acceptable intervals.
+
+### `Scenario`
+
+- reference to immutable world and plan;
+- epistemic parameter selection;
+- aleatory seed and draws;
+- warning, behavior, traffic, hazard, and failure events;
+- joint-plausibility constraint results;
+- proposal method and complete lineage.
+
+### `Intervention`
+
+- actor and operational decision;
+- typed changes to warning, staging, routing, traffic control, refuge, assistance, or infrastructure;
+- activation conditions, resources, delay, cost evidence, and legal/physical constraints;
+- groups and geographic areas affected.
+
+### `RunArtifact`
+
+- immutable inputs and container/software digests;
+- random seeds and simulator call accounting;
+- event trace, person/vehicle conservation, exposure trace;
+- safety/equity/operability metrics;
+- validity decisions and error taxonomy.
+
+### `FailureCertificate`
 
-## Research-item template
+- stable failure ID and causal family;
+- minimized scenario delta from a reference world;
+- reproduction rate and confidence interval;
+- necessary conditions and severity amplifiers;
+- affected zones/groups, choke points, and time interval;
+- cross-seed/model sensitivity;
+- candidate decisions and disclosure status.
 
-Every new item should include:
+## Milestone 0 — Reproducible research kernel
 
-- **Question**
-- **Hypothesis**
-- **Why it matters**
-- **Experiment**
-- **Strongest baselines**
-- **Success criterion**
-- **Kill or downgrade condition**
-- **Dependencies**
-- **Expected open artifact**
-- **Decision or actor affected**
+**Exit gate:** A clean machine can validate schemas and reproduce one deterministic run from a manifest.
 
-## P0 — Prove or reject the core thesis
+### FIRE-I001 — Python project and dependency lock
 
-### FIRE-R001 — Exact-competitor and baseline contract
+**Status:** Ready
+**Build:** Python 3.11 package, lint/type/test commands, deterministic numeric settings, dependency lock, container definitions for external engines.
+**Acceptance:** One documented command installs the orchestration layer; one command runs unit tests; CI repeats both on Linux. Version output is captured in every run.
+**Do not add:** web frontend, cloud platform, user accounts, distributed scheduler.
 
-**Status:** Proposed
-**Question:** What do existing wildfire-evacuation systems already accomplish, and what precise residual claim remains for Firescape?
+### FIRE-I002 — Source and experiment provenance
 
-**Hypothesis:** Existing systems provide coupled simulation and scenario analysis, but no accessible system demonstrates the complete adversarial falsification, counterexample minimization, intervention retesting, and evidence-gated ranking loop.
+**Status:** Ready
+**Build:** `SourceArtifact`, transformation records, SHA-256 hashing, license/redistribution flags, experiment manifests, immutable run IDs.
+**Acceptance:** Mutating any input, config, code version, or container digest changes the experiment/run identity. A run with an unregistered artifact is rejected.
 
-**Why it matters:** Firescape should not spend years recreating WUI-NITY, Ladris, Genasys, or established academic models.
+### FIRE-I003 — Scenario, plan, run, and certificate schemas
 
-**Experiment:** Build a dated capability matrix covering WUI-NITY, Ladris Fire/Evac, Genasys Protect, WUI-Go, recent coupled agent-based frameworks, fire-trigger models, robust evacuation optimization, and California traffic studies. Reproduce accessible baselines where possible.
+**Status:** Ready
+**Build:** Pydantic schemas with units, validation, JSON Schema export, upgrade/version policy, canonical serialization.
+**Acceptance:** Round-trip fixtures; incompatible units and unknown fields fail loudly; schemas cover every variable used by the golden worlds.
 
-**Strongest baselines:** WUI-NITY 4; Ladris Fire + Evac; recent modular fire–traffic–behavior frameworks; scenario-based evacuation studies.
+### FIRE-I004 — Deterministic runner and artifact store
 
-**Success criterion:** A technically specific residual contribution remains after exact comparison, with at least one plausible adopting research or planning actor.
+**Status:** Ready
+**Build:** Local CLI, seed tree, subprocess/container adapter, structured logs, DuckDB catalog, Parquet/JSONL result storage, resumable idempotent runs.
+**Acceptance:** Repeating a deterministic manifest produces byte-identical canonical metrics; interrupted batches resume without duplicate simulator calls.
 
-**Kill or downgrade condition:** An existing accessible system already provides the full loop and can accept the intended open contribution directly. In that case, Firescape should become a module or upstream contribution rather than a standalone platform.
+### FIRE-I005 — License and contribution boundary
 
-**Dependencies:** Literature and product access; practitioner interviews later.
+**Status:** Ready
+**Build:** Select repository license, third-party notices, data-license registry, contribution instructions, safety disclaimer.
+**Acceptance:** No public code/data release has an unknown reuse status; OSM-derived artifacts retain required attribution and share-alike handling.
 
-**Expected open artifact:** `research/landscape/competitor-capability-matrix.md` with sources and dated corrections.
+## Milestone 1 — Golden failure laboratory
 
-**Decision or actor affected:** Project scope; potential collaborators; funding narrative.
+**Exit gate:** Exhaustive enumeration proves that the runner, oracle, search accounting, replay, and minimizer work on known systems.
 
-### FIRE-R002 — Define the safety oracle
+### FIRE-A001 — Deterministic golden traffic engine
 
-**Status:** Proposed
-**Question:** What computational event constitutes a plan failure?
+**Status:** Ready
+**Build:** Small time-stepped network flow/queue engine with origins, destinations/refuge, edge capacity, storage, travel time, closures, exposure, and emergency priority.
+**Purpose:** Unit-test Firescape logic without blaming SUMO. It is not a scientific traffic model.
+**Acceptance:** Vehicle/person conservation, FIFO behavior where declared, analytic single-edge throughput, merge capacity, closure, and spillback tests.
 
-**Hypothesis:** Queue overtake, unsafe-road person-minutes, loss of every safe path, emergency-access obstruction, and missed zone safety deadlines form a sufficient initial oracle set.
+### FIRE-A002 — Six exhaustively enumerable worlds
 
-**Why it matters:** Adversarial search is meaningless if it optimizes a convenient but causally irrelevant score.
+**Status:** Ready
+**Build:**
 
-**Experiment:** Specify outcome definitions on small analytically understandable networks. Review them against documented wildfire evacuation failures and NIST evacuation concepts.
+1. queue overtaken by hazard;
+2. merge gridlock caused by simultaneous release;
+3. loss of every safe path after correlated closures;
+4. compressed warning plus pre-departure delay;
+5. emergency-access conflict;
+6. average improvement with worst-group regression.
 
-**Strongest baselines:** Clearance time alone; total travel time; required-safe-egress-time versus available-safe-egress-time comparisons.
+**Acceptance:** Each world declares the complete scenario space, exact failure boundary, expected minimal cause, and exhaustive reference result.
 
-**Success criterion:** The oracle detects known dangerous toy cases, distinguishes congestion from unsafe congestion, and does not hide a failed zone behind good aggregate performance.
+### FIRE-A003 — Validity and conservation oracles
 
-**Kill or downgrade condition:** No public-data-compatible proxy can connect simulation outcomes to meaningful safety conditions. Firescape would then be limited to traffic performance research.
+**Status:** Ready
+**Build:** Input plausibility, causal compatibility, graph reachability, conservation, temporal consistency, finite-number, and simulator-health checks.
+**Acceptance:** All seeded invalid fixtures are rejected with stable reason codes; no known valid extreme fixture is excluded.
 
-**Dependencies:** FIRE-R001; documented event mechanisms.
+### FIRE-A004 — Safety, equity, and operability oracle
 
-**Expected open artifact:** Versioned oracle specification, golden cases, and executable tests.
+**Status:** Ready
+**Build:** Lexicographic metric vector:
 
-**Decision or actor affected:** Every later research result.
+1. unsafe person-minutes;
+2. persons without a viable path;
+3. queue/vehicle overtake;
+4. emergency-access blocked minutes;
+5. zone clearance lateness;
+6. worst-zone/worst-group outcomes;
+7. total clearance and delay.
 
-### FIRE-R003 — Plausibility-envelope specification
+**Acceptance:** Every golden failure triggers its intended component; the worst-group fixture cannot be reported as an improvement; units and aggregation are documented.
 
-**Status:** Proposed
-**Question:** How can the adversary search bad-to-worst combinations without inventing nonsense?
+### FIRE-A005 — Replay and hierarchical delta minimization
 
-**Hypothesis:** Provenance-bearing marginal ranges plus explicit causal compatibility constraints can exclude obvious impossibilities while preserving rare compound failures.
+**Status:** Ready
+**Build:** Cross-seed replay; reproduce threshold; group→variable→value delta debugging; necessary-condition and severity-amplifier labels.
+**Acceptance:** Returns the known one-minimal cause for every golden world and is invariant to irrelevant parameter ordering.
 
-**Why it matters:** An unconstrained adversary will maximize simulator artifacts and impossible combinations.
+## Milestone 2 — Paradise–Magalia evidence world
 
-**Experiment:** Define scenario schemas for fire, warning, behavior, traffic, and institutions. Construct adversarial examples that are individually valid but jointly impossible, and test rejection logic.
+**Exit gate:** A versioned public evidence ensemble can reproduce selected qualitative Camp Fire mechanisms without pretending to reconstruct every person.
 
-**Strongest baselines:** Independent uniform ranges; expert-authored scenario sets; fully joint probabilistic models where available.
+### FIRE-D001 — Camp Fire evidence ledger
 
-**Success criterion:** All intentionally incompatible test cases are rejected with legible reasons, while all predeclared plausible rare cases remain searchable.
+**Status:** Ready
+**Inputs:** NIST NETTRA report and supplements, official incident reports, public notification/order records, traffic observations, refuge/convoy/closure records.
+**Build:** Machine-readable observation objects with interval, location, source excerpt locator, confidence, and whether they are calibration, validation, or contextual evidence.
+**Acceptance:** Include at minimum fire/road interaction, notification timing, closure timing, extreme travel delay, simultaneous artery loss, abandonment, temporary refuge, traffic redirection, contraflow/convoy evidence. No observation is used for both calibration and validation without disclosure.
 
-**Kill or downgrade condition:** Joint plausibility requires proprietary incident data or expert judgment unavailable to the project. Restrict the initial envelope and state the limitation.
+### FIRE-D002 — Public data manifest and fetchers
 
-**Dependencies:** FIRE-R001; FIRE-R002.
+**Status:** Ready
+**Inputs:** OSM, Census/TIGER, ACS, LODES, LANDFIRE, USGS 3DEP, HRRR, CAL FIRE perimeters, Caltrans counts/PeMS where applicable.
+**Build:** Pin query boundaries, versions/dates, hashes, licenses, download commands, transformations, and cached-fixture policy.
+**Acceptance:** A reviewer can rebuild the normalized source inventory; inaccessible or changed upstream data produces a legible failure, not silent substitution.
 
-**Expected open artifact:** Scenario schema, provenance format, constraint library, and coverage-report template.
+### FIRE-D003 — OSM-to-SUMO Paradise network
 
-**Decision or actor affected:** Researchers and reviewers assessing whether a failure is credible.
+**Status:** Ready
+**Build:** Import, clean, and document lanes, turns, junctions, restrictions, speeds, storage, signal/control, candidate refuges and destinations; retain source-to-edge mapping.
+**Validation:** Compare arterial continuity and geometry with public road evidence; flag high-leverage unknown local attributes.
+**Acceptance:** Network connectivity tests pass; every origin has a declared destination/refuge policy; suspect capacity attributes are ensemble variables rather than invented facts.
 
-### FIRE-R004 — Golden failure worlds
+### FIRE-D004 — Synthetic population and demand ensemble
 
-**Status:** Proposed
-**Question:** Can Firescape reliably find and explain failures whose causes are already known?
+**Status:** Ready
+**Build:** Aggregate origins and synthetic agents using Census/ACS/LODES, household vehicle availability, day/night location, occupancy, workers/visitors, and institutions. No named individual or device trace.
+**Acceptance:** Aggregate margins match source tolerances; uncertainty is represented through multiple populations; generated agents carry no reidentifying fields.
 
-**Hypothesis:** A small suite of synthetic networks can exercise queue overtake, merge gridlock, harmful staging, road isolation, emergency-access conflict, warning compression, and worst-group regression.
+### FIRE-D005 — Traffic calibration envelope
 
-**Why it matters:** Real geography is too complex to diagnose search and certification bugs initially.
+**Status:** Ready
+**Build:** Priors/ranges for free-flow speed, capacity, saturation flow, background traffic, turn choice, incident reduction, and smoke reduction using public counts and published studies.
+**Method:** Approximate Bayesian computation or multiobjective calibration over qualitative/interval targets; retain all acceptable parameter sets.
+**Acceptance:** Publish posterior/accepted ranges, non-identifiable parameters, and which historical mechanisms each accepted world can or cannot reproduce.
 
-**Experiment:** Create deterministic toy systems with known failure boundaries and necessary causal variables.
+### FIRE-D006 — Behavioral plausibility envelope
 
-**Strongest baselines:** Exhaustive enumeration on the small scenario spaces.
+**Status:** Ready
+**Build:** Explicit distributions for warning receipt, awareness/preparation/departure delay, early evacuation, household trip chaining, vehicle count/occupancy, route familiarity, compliance/rerouting, mobility support, and institutional loading.
+**Constraints:** Correlations and mutually incompatible states are executable. LLM-generated behavior is forbidden as evidence.
+**Acceptance:** Every marginal and dependency is sourced or labeled assumption; global sensitivity identifies whether unsupported behavior assumptions dominate outcomes.
 
-**Success criterion:** Firescape rediscovers every seeded failure, identifies the correct necessary variables, and preserves vehicle or flow conservation.
+### FIRE-D007 — Known-mechanism replay gate
 
-**Kill or downgrade condition:** The architecture cannot reproduce known failures deterministically. Do not connect a real community until fixed.
+**Status:** Blocked on FIRE-D003–D006 and hazard replay
+**Test:** Hold out selected NIST observations and ask whether an acceptable ensemble reproduces qualitative patterns rather than an exact trajectory.
+**Pass:** At least one accepted world reproduces each selected mechanism and no single parameter set is presented as truth.
+**Fail/pivot:** If public evidence cannot constrain the world, restrict the scientific claim to golden/synthetic benchmarks or rank evidence needs instead of interventions.
 
-**Dependencies:** FIRE-R002; FIRE-R003.
+## Milestone 3 — Hazard realization and coupling
 
-**Expected open artifact:** Synthetic benchmark package with analytical expectations and regression tests.
+**Exit gate:** Reproducible time-indexed hazard fields drive traffic-edge states and exposure, with no temporal leakage or hidden manual edits.
 
-**Decision or actor affected:** Firescape maintainers and external algorithm contributors.
+### FIRE-H001 — Canonical hazard-field contract
 
-### FIRE-R005 — Equal-budget scenario-selection baselines
+**Status:** Ready
+**Build:** Raster/mesh contract for arrival time, intensity/exposure class, smoke/visibility proxy, validity mask, time zone, resolution, uncertainty label, and provenance.
+**Acceptance:** Synthetic advancing-front and spot-fire fixtures interpolate correctly; out-of-domain roads are rejected or explicitly assigned no-data behavior.
 
-**Status:** Proposed
-**Question:** What performance must adversarial search beat?
+### FIRE-H002 — ELMFIRE container and adapter
 
-**Hypothesis:** Uniform Monte Carlo is weak, but stratified, quasi-random, historical, expert-authored, cross-entropy, and importance-sampling baselines will be competitive.
+**Status:** Ready
+**Build:** Pinned ELMFIRE image, input compiler, resource/time limits, logs, output normalizer, stable run ID, minimal validation cases.
+**Acceptance:** Reproduce one documented ELMFIRE validation case within declared tolerance; run the same input twice reproducibly; store complete provenance.
 
-**Why it matters:** Comparing only against random sampling would inflate novelty and usefulness.
+### FIRE-H003 — Paradise fire-realization library
 
-**Experiment:** Freeze simulation budgets and implement each baseline against the golden worlds and first geographical case.
+**Status:** Blocked on data manifest and ELMFIRE adapter
+**Build:** Bounded ensemble over ignition, weather, fuel moisture, spotting parameters, and model error; condition/reject against historical progression intervals for reconstruction members.
+**Acceptance:** Every realization is labelled historical-consistent, plausible counterfactual, or stress-only; no stress-only member is described as probable.
 
-**Strongest baselines:** Exhaustive enumeration where possible; expert cases; cross-entropy and adaptive importance sampling.
+### FIRE-H004 — Hazard-clock adapter
 
-**Success criterion:** Every baseline emits the same accounting: proposals, invalid cases, simulator calls, failures, severity, diversity, and compute.
+**Status:** Ready after FIRE-H001
+**Build:** Map hazard fields to time-indexed SUMO edge events: speed/capacity reduction, closure, reopening, exposure accumulation, and visibility.
+**Acceptance:** Golden raster/network tests prove event timing, interpolation, precedence, and unit conversion. No future hazard state leaks into agent routing unless the plan explicitly supplies a forecast.
 
-**Kill or downgrade condition:** A simple baseline saturates failure discovery at trivial cost. Focus on certification, intervention evaluation, or a harder scenario domain instead.
+### FIRE-H005 — Coupling-sufficiency test
 
-**Dependencies:** FIRE-R003; FIRE-R004.
+**Status:** Blocked on first end-to-end runs
+**Question:** Is one-way replay adequate for the intervention class?
+**Test:** Vary edge-event mappings and compare at least one alternate fire/exposure interpretation.
+**Upgrade triggers:** vehicle/structure fire feedback, suppression interaction, smoke models, or mapping choices reverse failure or intervention ranks.
 
-**Expected open artifact:** Baseline library and frozen benchmark protocol.
+## Milestone 4 — Full traffic, warning, and behavior simulation
 
-**Decision or actor affected:** Scientific novelty assessment.
+**Exit gate:** SUMO/libsumo executes reproducible scenarios, passes contracts against golden cases, and produces complete agent/exposure accounting.
 
-### FIRE-R006 — First adversarial-search superiority test
+### FIRE-T001 — SUMO/libsumo container and adapter
 
-**Status:** Proposed
-**Question:** Can an adaptive search discover more severe and causally diverse failures per expensive simulation than strong baselines?
+**Status:** Ready
+**Build:** Pinned SUMO image; programmatic step/run API; network, route, person, vehicle, closure, reroute, and metric exchange; structured error taxonomy.
+**Acceptance:** Official small-network smoke test plus Firescape merge/closure contract tests; complete version/seeds captured.
 
-**Hypothesis:** A transparent cross-entropy or quality-diversity search will outperform random and stratified sampling on narrow failure regions while retaining multiple failure families.
+### FIRE-T002 — Traffic demand and destination compiler
 
-**Why it matters:** This is the central computational claim.
+**Status:** Blocked on world/population schemas
+**Build:** Convert synthetic population and scenario into departure, vehicle, route/destination, background, inbound responder, bus/paratransit, and pedestrian demand.
+**Acceptance:** Conservation from source population to safe/refuge/unfinished states; deterministic compilation for a fixed seed.
 
-**Experiment:** Pre-register a fixed budget, seeds, scenario envelope, objectives, diversity descriptors, and superiority threshold. Run the adaptive method and all FIRE-R005 baselines.
+### FIRE-T003 — Warning and behavior state machine
 
-**Strongest baselines:** Best-performing FIRE-R005 method, not merely uniform random.
+**Status:** Ready after behavioral envelope
+**Build:** Warning unavailable→received→interpreted→preparing→departing→rerouting/refuge states with explicit dwell distributions and plan signals.
+**Acceptance:** State transition/property tests; no impossible double departure; receipt, preparation, and mobility support remain separable.
 
-**Success criterion:** A predeclared improvement in plausibility-adjusted severe failures and causal-family coverage per full simulation, repeated across seeds.
+### FIRE-T004 — Coupled event scheduler
 
-**Kill or downgrade condition:** No meaningful improvement, improvement disappears after compute accounting, or discoveries are mostly invalid. Stop building the adversarial platform until the cause is understood.
+**Status:** Blocked on hazard and traffic adapters
+**Build:** Deterministic ordering for warning, departure, routing, incident, hazard, traffic control, refuge, and measurement events.
+**Acceptance:** Tie-breaking contract, time-zone handling, no future-information leakage, consistent replay after resume.
 
-**Dependencies:** FIRE-R002 through FIRE-R005.
+### FIRE-T005 — Full-run trace and oracle integration
 
-**Expected open artifact:** Reproducible benchmark report including negative and failed runs.
+**Status:** Blocked on FIRE-T001–T004
+**Build:** Stream edge/person/vehicle/hazard state into oracle accumulators; avoid retaining unnecessary fine-grained personal traces.
+**Acceptance:** Reconcile starting population with all terminal states; reproduce golden-network results within an explicitly explained simulator tolerance.
 
-**Decision or actor affected:** Go/no-go for the project.
+### FIRE-T006 — Runtime and fidelity profile
 
-### FIRE-R007 — Failure reproduction and minimization
+**Status:** Blocked on first full world
+**Measure:** Wall time, memory, event volume, stochastic variance, scenario compile time, and failure rate across world sizes.
+**Decision:** Freeze the full-simulator-call budget and decide whether parallel local workers, traffic aggregation, or a surrogate is justified.
 
-**Status:** Proposed
-**Question:** Can a severe simulated outcome be converted into a stable, understandable causal certificate?
+## Milestone 5 — Equal-budget baseline suite
 
-**Hypothesis:** Seeded replay, robustness checks, and delta-debugging can separate necessary causal variables from severity amplifiers.
+**Exit gate:** All baselines share one proposal API, plausibility filter, call budget, seed protocol, and metric report.
 
-**Why it matters:** Planners cannot use a million-dimensional scenario vector or a one-off stochastic failure.
+### FIRE-S001 — Search-space registry
 
-**Experiment:** Apply reproduction thresholds and variable-removal tests to known golden failures and FIRE-R006 discoveries.
+**Status:** Ready
+**Build:** Typed dimensions, transforms, conditional variables, correlations, immutable bounds, evidence tier, mutation distance, and descriptor extraction.
+**Acceptance:** Sample/serialize/deserialize property tests; a frozen registry hash appears in every comparison.
 
-**Strongest baselines:** Raw worst scenario; feature importance from a surrogate; analyst-authored explanation.
+### FIRE-S002 — Historical and analyst scenario baseline
 
-**Success criterion:** Certificates reproduce above the frozen threshold, remove irrelevant perturbations, and preserve necessary causes.
+**Status:** Blocked on evidence ledger
+**Build:** Reconstructed Camp Fire family plus documented edge/extreme cases.
+**Acceptance:** Scenarios are traceable, not tuned after candidate results, and count against the same evaluation budget when simulated.
 
-**Kill or downgrade condition:** Failures are too unstable to reproduce or minimization returns misleading causes. Publish them only as exploratory anomalies.
+### FIRE-S003 — Random, stratified, Latin-hypercube, and Sobol baselines
 
-**Dependencies:** FIRE-R004; FIRE-R006.
+**Status:** Ready after registry
+**Build:** Reproducible low-discrepancy/stratified generators that respect conditional variables and joint constraints.
+**Acceptance:** Golden-space coverage and distribution tests; rejected proposals are counted.
 
-**Expected open artifact:** Failure-certificate schema, minimizer, and certificate registry fixtures.
+### FIRE-S004 — Cross-entropy method baseline
 
-**Decision or actor affected:** Planners, reviewers, and intervention designers.
+**Status:** Ready after registry
+**Build:** Mixed continuous/categorical CEM, elite update, smoothing, constraint handling, restarts, and multi-objective acquisition scalar used only for search.
+**Acceptance:** Finds every narrow golden failure within a frozen tolerance and emits complete proposal/update lineage.
 
-### FIRE-R008 — Intervention attack–repair–retest proof
+### FIRE-S005 — Equal-budget experiment harness
 
-**Status:** Proposed
-**Question:** Does adversarial discovery lead to better repairs than baseline scenario testing?
+**Status:** Ready after baselines
+**Build:** Method×budget×seed matrix, paired seed sets, resumable execution, preregistration hash, bootstrap estimates, anytime curves.
+**Metrics:**
 
-**Hypothesis:** Interventions selected against verified failure families will reduce held-out safety tail risk more than interventions selected from baseline scenarios alone.
+- verified severe failures per 100 full simulations;
+- unique causal failure families;
+- maximum and 95th-percentile severity;
+- time/calls to first verified failure;
+- area under verified-family coverage curve;
+- invalid proposal rate;
+- wall time and full-simulator calls.
 
-**Why it matters:** Finding catastrophes without improving a decision is not sufficient.
+**Acceptance:** Synthetic no-difference test has calibrated false-positive behavior; a deliberately superior fixture is detected.
 
-**Experiment:** Freeze a small intervention catalog—zone timing, release spacing, route split, traffic control, warning delay, and assisted capacity. Select interventions using separate discovery sets, then attack them using unseen scenarios and an independent search.
+## Milestone 6 — Quality-diversity adversary
 
-**Strongest baselines:** Best intervention under random scenarios; best average-clearance intervention; expert-selected intervention.
+**Exit gate:** Candidate algorithm faces the frozen equal-budget gate. This is the first major project go/no-go.
 
-**Success criterion:** At least one intervention materially reduces held-out tail risk without worsening the worst-served group and without excessive operational complexity.
+### FIRE-Q001 — Failure descriptor study
 
-**Kill or downgrade condition:** Repairs only solve their generating examples, reverse under modest parameter changes, or require unavailable controls. Limit Firescape to failure discovery and evidence prioritization.
+**Status:** Ready after golden certificates
+**Candidate descriptors:** first failed zone, dominant cut/choke point, warning-capacity interaction, demand/closure/route contribution, worst group, refuge dependence, emergency-access class.
+**Test:** Descriptors must split known causal mechanisms, remain stable across stochastic replay, and not use unavailable post hoc labels during proposal.
+**Reject:** Raw high-dimensional scenario distance or coordinates that create visually diverse but causally duplicate bins.
 
-**Dependencies:** FIRE-R002; FIRE-R006; FIRE-R007.
+### FIRE-Q002 — MAP-Elites reference implementation
 
-**Expected open artifact:** Intervention cards, held-out attack report, and residual-failure set.
+**Status:** Blocked on registry/descriptors
+**Build:** Mixed-variable mutation, constraint-aware repair, bounded archive, deterministic selection, severity/validity quality score, complete lineage.
+**Acceptance:** Recovers all reachable golden-world failure families and does not retain invalid candidates as elites.
 
-**Decision or actor affected:** Emergency managers and transportation planners.
+### FIRE-Q003 — CEM or CMA-ME emitters
 
-### FIRE-R009 — Evidence-gated intervention ranking
+**Status:** Blocked on QD reference
+**Build:** Emitters for random exploration, local improvement, and tail-region CEM; adaptive allocation is allowed only with auditable rules.
+**Acceptance:** Ablation reports the value of each emitter; standalone CEM remains an untouched baseline.
 
-**Status:** Proposed
-**Question:** Can Firescape rank interventions without laundering uncertainty into false precision?
+### FIRE-Q004 — Uncertainty-aware archive
 
-**Hypothesis:** Separate dimensions plus multiplicative evidence and feasibility gates will produce more defensible priorities than additive scores or modeled harm reduction alone.
+**Status:** Blocked on replay estimates
+**Build:** Store confidence bounds, reproduction probability, invalidity, model disagreement, and full-simulator count; promotion requires evidence, not one lucky run.
+**Acceptance:** Noisy golden tests do not let single-seed anomalies dominate the archive.
 
-**Why it matters:** A spectacular simulated benefit is not useful when the road capacity is unknown or nobody can implement the intervention.
+### FIRE-Q005 — Preregistered superiority experiment
 
-**Experiment:** Construct intervention cases containing fatal evidence, equity, actor, and feasibility weaknesses. Compare geometric, additive, benefit–cost-only, and expert rankings under sensitivity analysis.
+**Status:** Blocked on complete Paradise benchmark
+**Freeze before run:** space, worlds, fire library, call budget, seeds, methods, descriptors, severity threshold, family-clustering protocol, invalidity threshold, and analysis code hash.
+**Primary pass:** Across 10 seeds, the candidate achieves either ≥25% improvement in area under the verified severe-family coverage curve or ≥2 additional verified causal families at the same budget, on ≥8/10 seeds, with ≤5% invalid proposals.
+**Fail:** Stop algorithm expansion if the strongest baseline saturates discovery, compute accounting erases gains, or QD mainly finds simulator artifacts.
 
-**Strongest baselines:** Additive multi-criteria score; modeled benefit–cost; expert ordering.
+### FIRE-Q006 — Surrogate acquisition study
 
-**Success criterion:** Fatal weaknesses cannot be averaged away, close scores remain ties, and rank sensitivity is visible.
+**Status:** Deferred until a versioned corpus exists
+**Entry condition:** At least 10,000 diverse full runs or learning-curve evidence that less is sufficient.
+**Candidates:** Gaussian process, calibrated gradient-boosted trees, graph neural network for traffic state, differentiable fire surrogate as an alternate model.
+**Test:** Full-simulator failure-family coverage per wall-clock hour and per full call; calibration/out-of-distribution detection required.
+**Rule:** No learned model certifies a result.
 
-**Kill or downgrade condition:** Reasonable weights or evidence assumptions produce arbitrary rank reversals. Publish dimensions and tiers without a headline rank.
+### FIRE-Q007 — Sequential adaptive stress testing
 
-**Dependencies:** FIRE-R008; practitioner review eventually.
+**Status:** Deferred
+**Entry condition:** Evidence that within-event sequential adversarial decisions, rather than initial scenario selection, are the limiting search problem.
+**Candidates:** MCTS/AST over warning, failures, or time-evolving perturbations.
+**Reject:** DRL-first implementation without a demonstrable sequential advantage and strong nonlearned baseline.
 
-**Expected open artifact:** Ranking specification, test cases, and score-sensitivity report.
+## Milestone 7 — Failure certification and causal registry
 
-**Decision or actor affected:** Agencies prioritizing studies or interventions.
+**Exit gate:** A planner-facing certificate is reproducible, minimal, uncertainty-aware, and independent of optimizer internals.
 
-### FIRE-R010 — Paradise–Magalia end-to-end proof
+### FIRE-C001 — Replay policy and statistical certificate
 
-**Status:** Proposed
-**Question:** Does the complete method work in a geographically grounded, historically informed California case?
+**Status:** Ready after full simulation
+**Build:** Predeclared seed sets, reproduction probability, Wilson/bootstrap intervals, severity confidence, failed-run handling.
+**Acceptance:** Threshold behavior is tested; optimizer seeds are separated from certificate seeds.
 
-**Hypothesis:** Public terrain, fuel, road, weather, population, and Camp Fire evidence are sufficient to test the computational hypothesis without claiming an exact historical reconstruction.
+### FIRE-C002 — Full-simulator certificate minimizer
 
-**Why it matters:** Golden worlds establish correctness but not real-world relevance.
+**Status:** Ready after replay
+**Build:** Hierarchical group/variable/value removal with caching, monotonicity checks, and nonmonotone fallback.
+**Acceptance:** Matches golden minimal causes; reports alternative minimal certificates where causes are non-unique.
 
-**Experiment:** Build a versioned Paradise–Magalia experiment, conduct partial historical replay, freeze the scenario envelope and budgets, run FIRE-R005 through FIRE-R009, and solicit independent technical and practitioner critique.
+### FIRE-C003 — Causal signature and family clustering
 
-**Strongest baselines:** Published Camp Fire traffic and agent-based studies; simultaneous and staged plans; strongest scenario-selection baseline.
+**Status:** Blocked on certificate corpus
+**Build:** Rule-based causal signature first; cluster only over certified mechanism features; human-readable medoids and merge/split audit.
+**Acceptance:** Golden families are recovered; stability is measured across bootstrap samples and reasonable feature definitions.
 
-**Success criterion:** The pipeline reproduces known qualitative mechanisms, finds additional plausible failures, and produces at least one held-out-robust intervention or high-value evidence recommendation.
+### FIRE-C004 — Cross-model and artifact check
 
-**Kill or downgrade condition:** Public data cannot support even bounded safety claims, or results depend mainly on unvalidated local road and behavior assumptions. Publish the data-access failure and reassess geography.
+**Status:** Blocked on alternate model/mapping
+**Build:** Replay certificate under alternate capacity, behavior, hazard mapping, and where feasible alternate fire/traffic abstraction.
+**Labels:** robust, model-sensitive, unsupported, or artifact-suspect.
+**Acceptance:** Model-sensitive results cannot appear in top recommendations without an evidence action.
 
-**Dependencies:** FIRE-R001 through FIRE-R009.
+### FIRE-C005 — Failure registry and disclosure policy
 
-**Expected open artifact:** Complete experiment manifest, benchmark results, certificates, intervention cards, and validation report.
+**Status:** Ready after first certificates
+**Build:** Versioned registry, supersession, reproduction command, public/coarsened/coordinated-disclosure levels.
+**Acceptance:** Every public failure links inputs→run→oracle→minimization→sensitivity; sensitive choke-point detail is reviewed before publication.
 
-**Decision or actor affected:** Project go/no-go; potential Butte County and California reviewers.
+## Milestone 8 — Intervention attack–repair–retest
 
-## P1 — Establish transfer and decision value
+**Exit gate:** At least one implementable intervention survives an independent held-out attack and worst-group constraints.
 
-### FIRE-R101 — California-addressable world construction
+### FIRE-V001 — Typed intervention compiler
 
-**Question:** Can a submitted California location be converted into a transparent full-pipeline experiment without silent assumptions?
+**Status:** Ready after plan schema
+**v0 catalog:** staged warning/order, warning timing, route/destination allocation, intersection control, contraflow activation, emergency-only capacity, temporary refuge, bus/paratransit allocation, one road-capacity change.
+**Acceptance:** Each intervention names actor, activation delay, resources, constraints, affected groups, and exact simulator mutations. Invalid combinations are rejected.
 
-**Hypothesis:** Public statewide datasets can automate most physical-world construction while emitting a useful missing-evidence ledger.
+### FIRE-V002 — Intervention selection baselines
 
-**Experiment:** Test the constructor on mountain, canyon, suburban WUI, coastal hillside, tourist, and multi-community corridor archetypes.
+**Status:** Blocked on failure families
+**Build:** no change, analyst-authored repair, optimize mean clearance, optimize discovered scenarios only, robust tail/equity selection.
+**Acceptance:** Comparison shows whether the adversarial evidence adds value beyond conventional objective optimization.
 
-**Success criterion:** Every source, transformation, license, assumption, and missing local input appears in a deterministic manifest.
+### FIRE-V003 — Held-out attacker protocol
 
-**Kill condition:** Local manual work dominates construction or automated defaults control outcomes. Narrow statewide-addressable claims.
+**Status:** Ready after search suite
+**Build:** Independent fire/behavior/traffic draws; attacker different from repair discovery method; no reuse of certificate seeds; immutable hidden manifest hash.
+**Acceptance:** Leakage tests; only after analysis does the hidden manifest become public.
 
-**Artifact:** California ingestion package and coverage-state registry.
+### FIRE-V004 — Tail-risk and equity evaluation
 
-### FIRE-R102 — Behavioral uncertainty and plan reversal
+**Status:** Blocked on intervention runs
+**Primary pass:** One feasible intervention reduces held-out CVaR of unsafe person-minutes ≥30%, worsens the worst-served group no more than 5%, and retains direction across at least two reasonable behavior/fire variants.
+**Secondary:** Family elimination, persons without safe path, emergency access, clearance, cost/operability.
+**Fail:** Do not claim harm reduction if gains exist only on attacked training scenarios or one model.
 
-**Question:** Which warning, departure, destination, and compliance assumptions change the preferred intervention?
+### FIRE-V005 — Decision and evidence cards
 
-**Hypothesis:** A small subset of behavioral uncertainties controls most plan reversals.
+**Status:** Blocked on supported intervention
+**Build:** Actor, action, failure family, modeled benefit interval, residual failures, cost/authority assumptions, evidence tier, most decision-sensitive unknown, and next validation action.
+**Acceptance:** A practitioner can state what decision the card could change and what it cannot establish.
 
-**Experiment:** Global sensitivity analysis using published survey ranges and correlated household archetypes.
+## Milestone 9 — Transfer, adoption, and release
 
-**Success criterion:** Identify stable simplifications and decision-critical unknowns separately.
+**Exit gate:** The contribution survives a second geography/model and an external actor sees a legitimate use.
 
-**Kill condition:** Nearly every plausible behavior model changes the intervention. Return insufficient evidence and prioritize local behavioral studies.
+### FIRE-X001 — Second-geography selection
 
-**Artifact:** Behavior sensitivity atlas and value-of-information recommendations.
+**Status:** Deferred until Q005
+**Selection criteria:** different topology and fire history; sufficient public evidence; no method tuning before selection. Candidate families include Berkeley/Marin studies or a documented 2025 Southern California event.
+**Acceptance:** Selection rationale and hidden validation targets are frozen before transfer work.
 
-### FIRE-R103 — Cross-model disagreement
+### FIRE-X002 — Cross-geography replication
 
-**Question:** Do important failures and interventions survive alternate fire, traffic, and behavior models?
+**Status:** Deferred
+**Pass:** Candidate search and certificate protocol retain a meaningful advantage without Paradise-specific descriptor or threshold redesign.
+**Fail:** Reframe as a case-specific method or revise the scientific claim.
 
-**Hypothesis:** Causal failure families transfer more reliably than precise exposure counts or clearance times.
+### FIRE-X003 — Practitioner evidence review
 
-**Experiment:** Re-run high-value certificates through at least one alternate model per controlling layer.
+**Status:** Ready once a certificate/card exists
+**Actors:** county/city emergency management, transportation/public works, fire/law enforcement, Cal OES/Caltrans researchers, WUI evacuation academics.
+**Test:** Can the artifact change a plan, exercise, traffic-control study, refuge policy, data collection, or grant priority? What would make it inadmissible?
+**Acceptance:** One named decision path and documented criticism; endorsement is not required.
 
-**Success criterion:** The causal mechanism persists within predeclared tolerances.
+### FIRE-X004 — Open benchmark v1
 
-**Kill condition:** High-value rankings systematically reverse. Downgrade them and study model selection as the controlling problem.
+**Status:** Deferred until transfer gate
+**Ship:** schemas, golden worlds, reproducible public cases, baseline library, QD method, manifests, metrics, certificates, negative results, data licenses, and compute/cost report.
+**Acceptance:** Independent clean-machine reproduction of at least one full experiment.
 
-**Artifact:** Cross-model verification matrix.
+### FIRE-X005 — Statewide-addressable feasibility study
 
-### FIRE-R104 — Vehicle-less and supported evacuation
+**Status:** Deferred until all preceding gates pass
+**Question:** Which California locations can be constructed at what evidence tier and marginal cost?
+**Rule:** Do not publish cross-community safety rankings from incomparable calibration.
 
-**Question:** Which combinations of transit, paratransit, pickup points, and departure timing protect populations without vehicles or independent mobility?
+## Cross-cutting algorithmic research queue
 
-**Hypothesis:** Explicit supported-evacuation capacity changes intervention rankings that vehicle-only simulations would produce.
+These studies are scheduled by evidence, not fashion.
 
-**Experiment:** Add vehicle-less households, mobility needs, loading time, fleet limits, and assistance coordination to selected cases.
+| ID | Question | Earliest entry | Decision |
+|---|---|---|---|
+| ALG-01 | Which causal descriptors yield stable, nonduplicate failure families? | Golden certificates | Locks QD archive axes |
+| ALG-02 | Does CEM-QD beat standalone CEM at the same full-call budget? | Baseline suite | Core novelty gate |
+| ALG-03 | Does uncertainty-aware elite promotion prevent lucky-run artifacts? | Noisy golden worlds | Locks certificate sampling policy |
+| ALG-04 | Which hierarchical minimizer handles nonmonotone causes with least full-sim cost? | First failures | Locks certificate algorithm |
+| ALG-05 | Can active learning reduce full calls while preserving calibrated tail discovery? | ≥10k runs or learning-curve proof | Allows surrogate acquisition |
+| ALG-06 | Do graph surrogates transfer across unseen road topology? | Two geographies | Determines value of GNN research |
+| ALG-07 | Does differentiable fire simulation help scenario acquisition without biasing certification? | Alternate-model stage | Determines PyTorchFire/ForeFire track |
+| ALG-08 | Is robust intervention selection better modeled as distributionally robust optimization, CVaR search, or constrained QD? | Certificate corpus | Locks repair selector |
+| ALG-09 | Can value-of-information analysis rank measurements when repairs are assumption-sensitive? | Model reversal/data dominance | Opens evidence-priority pivot |
+| ALG-10 | Does sequential AST add failure families unavailable to initial-condition search? | Sequential limitation demonstrated | Opens MCTS/AST track |
 
-**Success criterion:** Produce interventions that improve worst-group safety under held-out attacks.
+## Data and validation research queue
 
-**Kill condition:** Required local data are inaccessible and assumed ranges dominate results. Rank the missing evidence instead.
+| ID | Unknown | Initial treatment | Escalation evidence |
+|---|---|---|---|
+| DAT-01 | Local road/intersection capacity | Wide calibrated ensemble | Targeted counts or agency geometry/control data |
+| DAT-02 | Incident departure and route behavior | Published distribution/archetypes | Survey, drill, connected-vehicle, or deidentified trace agreement |
+| DAT-03 | Visitors and background demand | LODES/season/time ensemble | Tourism/mobile aggregate evidence with lawful access |
+| DAT-04 | Warning receipt and interpretation | Channel/delay ensemble | Alert delivery logs and survey evidence |
+| DAT-05 | Access/functional-needs movement | Explicit bounded archetypes | Co-designed agency/community evidence |
+| DAT-06 | Institutions and assisted evacuation | Parametric loading/fleet models | Facility plans, drill timing, fleet availability |
+| DAT-07 | Fire arrival at road scale | ELMFIRE ensemble and NIST intervals | Sensor/video/reconstruction or alternate-model agreement |
+| DAT-08 | Smoke/visibility speed effects | Sensitivity range | Empirical traffic-under-smoke data |
+| DAT-09 | Temporary refuge capacity/use | Historical evidence and scenario bounds | Site-level operational review |
+| DAT-10 | Emergency inbound traffic | Parametric priority/demand | Agency AVL/after-action evidence |
 
-**Artifact:** Open supported-evacuation benchmark.
+## Experiment preregistration template
 
-### FIRE-R105 — Institutional demand waves
+Every comparative result must freeze:
 
-**Question:** When do schools, hospitals, care facilities, and major employers create or suffer catastrophic congestion?
+- research question and one primary endpoint;
+- world, plan, source, and simulator digests;
+- search space and plausibility constraints;
+- calibration and held-out evidence split;
+- algorithms, hyperparameter budget, compute/call budget;
+- seed generation and number of replicates;
+- failure threshold and family protocol;
+- invalid-run/proposal handling;
+- statistical analysis and uncertainty intervals;
+- success, kill, and pivot thresholds;
+- excluded mechanisms and external-validity boundary;
+- exact code/config hash before results are inspected.
 
-**Hypothesis:** Institution-specific timing can create failure families invisible in residential demand models.
+## Risk register and automatic penalties
 
-**Experiment:** Vary dismissal, pickup, loading, staffing, and route interaction in communities with relevant facilities.
+| Risk | Current severity | Required control | Automatic consequence |
+|---|---:|---|---|
+| Behavioral ground truth is weak | Critical | Ensemble, sensitivity, evidence tiers, no LLM truth | Downgrade intervention confidence; pivot to evidence value if rank-dominant |
+| Local-road capacity is weak | Critical | Capacity ensemble and targeted validation | No local operational recommendation |
+| Fire/traffic sim-to-reality gap | High | Known-mechanism replay and cross-model checks | Model-sensitive label; no certification claim |
+| Broad field is already crowded | High | Residual claim and exact-system updates | Contribute upstream if equivalent open loop is found |
+| Paradise overfitting | High | Hidden second geography | No transfer or statewide claim |
+| Search exploits simulator bugs | Critical | Validity oracle, replay, minimization, alternate model | Reject artifact-suspect family |
+| Unclear adopter | High | Practitioner evidence review | No scaling or product spend |
+| Compute becomes frontier-scale | Medium | Profile, precomputed hazard fields, equal call accounting | Simplify world or stop; no opaque cloud spend |
+| Detailed vulnerabilities create misuse risk | Medium | Disclosure classification and coarsening | Withhold/coarsen sensitive artifact |
+| Open data licensing blocks redistribution | Medium | Manifest/license registry | Release fetch/transform code, not prohibited data |
 
-**Success criterion:** Identify actionable procedural changes or establish that road capacity remains binding.
+## Frozen go, pivot, and stop gates
 
-**Artifact:** Institutional scenario and intervention library.
+### Gate G1 — Research kernel
 
-### FIRE-R106 — Shared regional corridors
+Pass when golden worlds, oracles, replay, and minimization reproduce exhaustive truth. Failure blocks real geography.
 
-**Question:** How often do community-level plans fail after neighboring demand enters the same downstream network?
+### Gate G2 — Public Paradise world
 
-**Hypothesis:** Independent community analysis systematically overestimates safety for shared-corridor systems.
+Pass when an ensemble of plausible worlds reproduces selected held-out qualitative Camp Fire mechanisms. If public evidence cannot constrain the world, continue only as a synthetic algorithm benchmark or evidence-priority project.
 
-**Experiment:** Couple two or more community systems with independently timed orders and regional background traffic.
+### Gate G3 — Search superiority
 
-**Success criterion:** Quantify when regional coordination changes the preferred plan or infrastructure intervention.
+Pass only under FIRE-Q005. If CEM/Sobol saturates the space or QD gains vanish under accounting, stop the adversarial-algorithm expansion and publish the result.
 
-**Artifact:** Multi-community corridor benchmark.
+### Gate G4 — Actionable certificate
 
-### FIRE-R107 — Value-of-information ranking
+Pass when multiple independently replayable failures minimize into stable, legible causal certificates. If failures remain high-dimensional or model-specific, do not call them decision evidence.
 
-**Question:** Can Firescape identify the measurement most likely to change an intervention decision?
+### Gate G5 — Robust intervention
 
-**Hypothesis:** Expected value of information can distinguish decision-critical traffic counts, drills, surveys, and local plan facts from generally interesting data.
+Pass only under FIRE-V004. If no repair survives an independent attacker and alternate assumptions, do not claim that the research reduces harm.
 
-**Experiment:** Compare intervention rankings before and after simulated resolution of uncertain inputs, then validate prospectively where feasible.
+### Gate G6 — Transfer and actor
 
-**Success criterion:** Recommended evidence collection changes confidence or action more often than generic data collection.
+Pass when the protocol transfers to a second geography and an identifiable actor confirms a legitimate decision use. Only then evaluate statewide-addressable infrastructure or a product interface.
 
-**Kill condition:** Results are too model-dependent to prioritize measurements reliably.
+## First 60 days: dependency-ordered execution
 
-**Artifact:** Evidence-priority cards and evaluation report.
+### Days 1–10
 
-### FIRE-R108 — Surrogate-assisted simulation allocation
+- FIRE-I001–I004: project, schemas, provenance, runner;
+- FIRE-A001–A004: golden engine, worlds, validity and safety oracles;
+- begin FIRE-D001 and FIRE-D002 evidence manifests.
 
-**Question:** Can learned models reduce expensive simulator calls without certifying false failures?
+**Checkpoint:** exhaustive truth is machine-readable and the runner is deterministic.
 
-**Hypothesis:** An uncertainty-aware graph or temporal surrogate can improve failure discovery per full simulation while every public finding remains fully verified.
+### Days 11–20
 
-**Experiment:** Compare tree, Gaussian-process, graph, and temporal surrogates as acquisition functions on held-out communities.
+- FIRE-A005 replay/minimization;
+- FIRE-H001 hazard contract;
+- FIRE-T001 SUMO adapter;
+- FIRE-D003 network and FIRE-D004 population.
 
-**Success criterion:** Better discovery efficiency, calibrated uncertainty, and no increase in published false certificates.
+**Checkpoint:** a synthetic world executes through both traffic engines and returns the same failure classification.
 
-**Kill condition:** Gains disappear after training cost or fail under geography shift. Retain nonlearned search.
+### Days 21–30
 
-**Artifact:** Surrogate benchmark and model cards.
+- FIRE-D005/D006 calibration and behavior envelopes;
+- FIRE-H002/H003 ELMFIRE adapter and small fire library;
+- FIRE-H004 and FIRE-T002–T005 full coupling.
 
-### FIRE-R109 — Transfer across community archetypes
+**Checkpoint:** first traceable Paradise run, including conservation and exposure metrics.
 
-**Question:** Which failure families and interventions transfer across geography?
+### Days 31–40
 
-**Hypothesis:** Road topology, fire-approach structure, population distribution, and institutional dependence define useful transfer archetypes.
+- FIRE-D007 known-mechanism replay;
+- FIRE-T006 runtime profile and budget freeze;
+- FIRE-S001–S004 baseline implementations.
 
-**Experiment:** Hold out complete communities and test whether archetype-informed search or interventions improve results.
+**Checkpoint:** G2 decision and signed preregistration draft.
 
-**Success criterion:** Transfer beats geography-agnostic baselines without suppressing local failure discovery.
+### Days 41–50
 
-**Kill condition:** Local differences dominate. Keep the registry as case-specific evidence rather than a transfer engine.
+- FIRE-S005 experiment harness;
+- FIRE-Q001–Q004 QD implementation and ablations;
+- run golden benchmark, freeze Paradise preregistration.
 
-**Artifact:** Community-archetype and held-out transfer benchmark.
+**Checkpoint:** no method-specific integration path; every proposal flows through the same validity/full-sim/certificate boundary.
 
-### FIRE-R110 — Planner comprehension and actionability
+### Days 51–60
 
-**Question:** Can intended users understand and use failure certificates and intervention cards?
+- FIRE-Q005 superiority run;
+- FIRE-C001–C003 certification and family registry;
+- FIRE-V001–V004 three interventions and independent held-out attack;
+- publish G3–G5 decision, including negative results.
 
-**Hypothesis:** Minimized causal explanations outperform raw simulation dashboards for identifying a next planning action.
+**Scope rule:** If Paradise data construction consumes the schedule, use a traceable published fire-arrival field for the first method gate and continue ELMFIRE reconstruction separately. Do not relax the equal-budget or full-SUMO requirements.
 
-**Experiment:** Structured review with emergency managers, transportation planners, and facility operators comparing raw scenarios, standard dashboards, and Firescape cards.
+## Twelve-month sequence
 
-**Success criterion:** Reviewers accurately identify the causal bottleneck, assumptions, residual risk, and next action.
+1. Months 1–2: complete G1–G5 or publish why they failed.
+2. Months 3–4: harden manifests, certificate format, cross-model checks, and value-of-information pivot.
+3. Months 5–6: freeze and construct a genuinely different second geography.
+4. Months 7–8: run transfer experiment and descriptor/search ablations.
+5. Months 9–10: external research and practitioner review; integrate criticism without moving original thresholds.
+6. Months 11–12: benchmark v1, replication package, scientific paper/report, and explicit scale/no-scale decision.
 
-**Kill condition:** Cards are misunderstood or encourage overconfidence. Redesign outputs before public release.
+The 12-month proof target is two cases, one reusable protocol, one supported repair family, and one real decision path—not a statewide consumer application.
 
-**Artifact:** Comprehension protocol and anonymized findings.
+## Immediate next work item
 
-## P2 — Grow an open observatory
+Start **FIRE-I001 through FIRE-A004** as one vertical research-kernel slice:
 
-### FIRE-R201 — Distributed experiment registry
+1. freeze project/tool versions;
+2. define schemas and canonical run IDs;
+3. implement the deterministic queue engine;
+4. create the six golden worlds;
+5. implement validity and lexicographic safety oracles;
+6. exhaustively enumerate and store truth fixtures.
 
-Define immutable experiment identifiers, provenance, reproduction environments, review states, supersession, and artifact storage for contributions from multiple organizations.
-
-### FIRE-R202 — Benchmark governance
-
-Create hidden test cases, independent adversaries, anti-overfitting rules, result review, and rules for adding newly discovered failures.
-
-### FIRE-R203 — Responsible vulnerability disclosure
-
-Determine what community details can be public, coarsened, embargoed, or shared only with authorized agencies. Test the policy against realistic choke-point and communication findings.
-
-### FIRE-R204 — Distributed and donated compute
-
-Evaluate whether content-addressed jobs and deterministic containers can expand California coverage without compromising reproducibility or sensitive inputs.
-
-### FIRE-R205 — Prospective tabletop and drill validation
-
-Translate verified failure families into exercise injects and compare modeled causal mechanisms with observed coordination, timing, and traffic behavior.
-
-### FIRE-R206 — Global jurisdiction adapters
-
-Test whether the core schemas, adversary, oracles, and certificates transfer outside California once a local data and authority adapter is supplied.
-
-### FIRE-R207 — Other rapid-onset hazards
-
-Only after wildfire validation, investigate whether the falsification and intervention framework transfers to tsunami, flood, volcanic, or industrial evacuation without erasing hazard-specific mechanisms.
-
-## Deferred or rejected directions
-
-### Live turn-by-turn routing
-
-**Deferred until:** offline recommendations have prospective evidence, reliable live data exist, governance is defined, and human-factors risks are addressed.
-
-### Custom wildfire-physics engine
-
-**Rejected for v0 because:** it duplicates mature work and does not test the core adversarial hypothesis.
-
-### Custom microscopic traffic engine
-
-**Rejected for v0 because:** SUMO and other established simulators provide adapters sufficient for the initial research question.
-
-### Named-household digital twins
-
-**Rejected because:** they create privacy risk and false precision without being necessary for the core hypothesis.
-
-### LLM-driven evacuee agents
-
-**Deferred until:** explicit probabilistic behavior models have been exhausted and an LLM approach demonstrates external behavioral validity.
-
-### Exact fatality prediction
-
-**Rejected because:** available ground truth and causal modeling do not justify point estimates, and such outputs could mislead decisions.
-
-### Precomputed full-fidelity simulation of every California location
-
-**Rejected for initial scope because:** statewide local calibration and exhaustive computation are not available. Firescape is statewide-addressable and full-pipeline-on-demand instead.
-
-### Direct ranking of California towns
-
-**Deferred until:** scenario domains, calibration, evidence quality, and uncertainty are comparable. Intervention and evidence rankings come first.
-
-### General all-hazard platform
-
-**Deferred until:** the wildfire-specific core hypothesis is supported and the hazard-specific mechanisms are understood.
-
-## Near-term execution order
-
-The initial sequence is deliberately strict:
-
-1. FIRE-R001 — exact competitors and residual claim.
-2. FIRE-R002 — safety oracle.
-3. FIRE-R003 — plausibility envelope.
-4. FIRE-R004 — golden failure worlds.
-5. FIRE-R005 — strong baselines.
-6. FIRE-R006 — adversarial superiority test.
-7. FIRE-R007 — failure certificates.
-8. FIRE-R008 — intervention attack–repair–retest.
-9. FIRE-R009 — evidence-gated ranking.
-10. FIRE-R010 — Paradise–Magalia end-to-end proof.
-
-Do not start P1 statewide scaling simply because the software pipeline exists. P1 begins only after FIRE-R006 through FIRE-R009 produce a credible positive result or a clearly revised hypothesis.
-
-## Project-level go/no-go gate
-
-Firescape earns continued investment only if the first end-to-end research cycle demonstrates that:
-
-1. adversarial search finds more severe and causally diverse failures per full simulation than the strongest equal-budget baseline;
-2. those failures are plausible, reproducible, and minimizable;
-3. their causal explanations are understandable to an external reviewer;
-4. at least one resulting intervention survives held-out attacks and does not worsen the worst-served population;
-5. the output connects to an identifiable planning, exercise, infrastructure, or evidence decision.
-
-If these conditions fail, publish the negative result and stop, narrow, or redirect the project rather than building a larger platform around an unsupported premise.
+Do not begin ELMFIRE integration, UI, deep learning, or statewide ingestion until this slice proves that Firescape can state exactly what a failure is and find known failures without ambiguity.

@@ -1,0 +1,131 @@
+field_categories:
+  - category: "Scope and pathway"
+    fields:
+      - name: "research_object"
+        description: "Exact research object covered by this result."
+        detail_level: "brief"
+        required: true
+      - name: "real_world_harm_and_scale"
+        description: "Underlying harm, severity, affected populations, and quantitative evidence where available."
+        detail_level: "detailed"
+        required: true
+      - name: "causal_path_to_harm_reduction"
+        description: "Technical improvement through actor decision to measurable reduction in harm."
+        detail_level: "detailed"
+        required: true
+      - name: "exact_bottleneck"
+        description: "Specific computational bottleneck rather than the broad wildfire-evacuation problem."
+        detail_level: "detailed"
+        required: true
+      - name: "decision_or_capability_changed"
+        description: "Identifiable decision, plan, exercise, evidence collection, or capability affected."
+        detail_level: "detailed"
+        required: true
+  - category: "Attention and residual novelty"
+    fields:
+      - name: "closest_systems_and_attempts"
+        description: "Closest academic, government, commercial, and open-source systems with exact overlap."
+        detail_level: "detailed"
+        required: true
+      - name: "publication_and_group_attention_since_2020"
+        description: "Publication volume or scoped search evidence, growth, active groups, and concentration since 2020."
+        detail_level: "detailed"
+        required: true
+      - name: "funding_commercial_and_government_activity"
+        description: "Government, philanthropic, startup, incumbent, procurement, and deployment activity."
+        detail_level: "detailed"
+        required: true
+      - name: "benchmark_and_open_source_maturity"
+        description: "Availability and maturity of benchmarks, code, interfaces, tests, and reproducible implementations."
+        detail_level: "detailed"
+        required: true
+      - name: "residual_contribution"
+        description: "What remains genuinely differentiated after comparison with the closest work."
+        detail_level: "detailed"
+        required: true
+      - name: "why_little_attention"
+        description: "Why the residual pathway has received less attention and whether each reason is opportunity or warning."
+        detail_level: "detailed"
+        required: true
+  - category: "Feasibility and evidence"
+    fields:
+      - name: "public_data_and_ground_truth"
+        description: "Datasets, licenses, resolution, update cadence, access conditions, ground-truth strength, and exclusions."
+        detail_level: "detailed"
+        required: true
+      - name: "simulator_and_tool_options"
+        description: "Candidate simulators and tools, capabilities, licenses, runtime, interfaces, and limitations."
+        detail_level: "detailed"
+        required: true
+      - name: "recommended_technical_stack"
+        description: "Concrete initial stack, boundaries, schemas, coupling interfaces, and reasons for selection."
+        detail_level: "detailed"
+        required: true
+      - name: "repeated_unresolved_limitations"
+        description: "Limitations repeated in reviews, deployments, documentation, or practitioner evidence."
+        detail_level: "detailed"
+        required: true
+      - name: "excluded_populations_geographies_and_failures"
+        description: "Populations, geographies, operating conditions, or failure modes missed by current work and by the proposed first loop."
+        detail_level: "detailed"
+        required: true
+      - name: "why_now"
+        description: "Recent data, compute, regulation, simulator, or methodological changes that alter tractability."
+        detail_level: "detailed"
+        required: true
+      - name: "hidden_dependencies_and_penalties"
+        description: "Ground-truth, proprietary-data, hardware, compute, adoption, sim-to-reality, and other fatal-dependency penalties."
+        detail_level: "detailed"
+        required: true
+  - category: "Experiment and decision"
+    fields:
+      - name: "falsifiable_hypothesis"
+        description: "Predeclared claim that the first experiment can support or reject."
+        detail_level: "detailed"
+        required: true
+      - name: "strongest_baselines"
+        description: "Competitive scenario selection, simulator, and intervention baselines under equal budgets."
+        detail_level: "detailed"
+        required: true
+      - name: "experiment_protocol"
+        description: "Scenario envelope, oracle, algorithms, budgets, seeds, held-outs, statistics, and artifacts."
+        detail_level: "detailed"
+        required: true
+      - name: "success_and_kill_thresholds"
+        description: "Numerical or categorical go, downgrade, and stop criteria fixed before results."
+        detail_level: "detailed"
+        required: true
+      - name: "solo_30_60_day_feasibility"
+        description: "Scope, work estimate, compute needs, and evidence that a solo software researcher can execute it."
+        detail_level: "detailed"
+        required: true
+      - name: "twelve_month_proof_target"
+        description: "A credible 12-month scientific and translation target if the first gate passes."
+        detail_level: "detailed"
+        required: true
+      - name: "actors_and_translation_path"
+        description: "Named types of adopters, workflow insertion point, and outputs they can use."
+        detail_level: "detailed"
+        required: true
+      - name: "strongest_rejection_argument"
+        description: "Best argument that the pathway is not worth pursuing."
+        detail_level: "detailed"
+        required: true
+      - name: "evidence_that_changes_decision"
+        description: "Specific new evidence that would materially raise, lower, or reverse the ranking."
+        detail_level: "detailed"
+        required: true
+      - name: "go_no_go_assessment"
+        description: "GO, CONDITIONAL GO, or NO-GO with separate scores for importance, leverage, neglectedness, tractability, accessibility, marginal contribution, translation, and evidence confidence."
+        detail_level: "detailed"
+        required: true
+      - name: "sources"
+        description: "Primary and authoritative URLs with title, date, source type, and claim supported."
+        detail_level: "detailed"
+        required: true
+  - category: "Uncertainty"
+    fields:
+      - name: "uncertain"
+        description: "Field names containing uncertain claims."
+        detail_level: "brief"
+        required: false

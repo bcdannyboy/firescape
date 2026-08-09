@@ -1,0 +1,394 @@
+{
+  "research_object": "Landscape attention and adoption for an open-source, adversarial wildfire-evacuation stress-testing layer ('Firescape') aimed at California planning and operations.",
+  "real_world_harm_and_scale": [
+    "Wildfire evacuation failure is directly life-critical. NIST's Camp Fire NETTRA case study reports that the 2018 Camp Fire quickly forced the evacuation of 40,000 people and resulted in 85 fatalities and more than 18,000 destroyed structures.",
+    "The problem is not limited to one town. A June 4, 2026 University of California release reports that 17.7 million Americans live in communities below a critical six-exit threshold, and 2.5 million of them are also in high wildfire hazard areas.",
+    "Operational communication failures can amplify the harm. Los Angeles County stated on January 10, 2025 that a correctly targeted alert was erroneously sent to nearly 10 million residents, showing that alerting, zoning, routing, and public trust are part of the same safety system."
+  ],
+  "causal_path_to_harm_reduction": [
+    "Firescape's plausible path is: stress-test an existing evacuation plan or zone design under coupled fire, traffic, human-behavior, and communications failures; identify the specific assumptions that break; then convert those findings into route, zoning, trigger, phasing, and refuge-area changes before the next fire or plan update.",
+    "The measurable outputs are lower clearance times, fewer exposed or stranded households, lower dependence on improvised refuge, fewer shadow-evacuation spillovers, and better identification of neighborhoods where evacuation is infeasible without infrastructure or policy change.",
+    "The translation mechanism is strongest when the tool is used before safety-element updates, CWPP revisions, CEQA wildfire analysis, evacuation-study grants, vendor procurement, and annual drills, rather than during live incident command."
+  ],
+  "exact_bottleneck": [
+    "The bottleneck is not 'wildfire evacuation' in general. It is the lack of an open, auditable, scenario-search layer that can falsify evacuation assumptions under no-notice conditions, road failures, alert delays, tourist surges, and vulnerable-population constraints using mostly public California data.",
+    "Current options split into three incomplete buckets: closed commercial systems with adoption but limited public auditability; research platforms that couple fire/traffic/behavior but are not county-ready; and narrow algorithm papers that optimize one slice of the stack without reproducing agency workflows.",
+    "Because of that split, counties can buy software or cite studies, but still lack a transparent way to compare plan robustness across tools, assumptions, and worst-case envelopes."
+  ],
+  "decision_or_capability_changed": [
+    "Primary decisions changed: which evacuation zones exist, when each zone is warned or ordered, whether staged evacuation or contraflow is justified, where temporary fire refuge areas should exist, and which road or vegetation projects matter most for life safety.",
+    "Planning decisions changed: what a city or county writes into a safety element, local hazard mitigation plan, CWPP, evacuation study, or CEQA wildfire appendix.",
+    "Procurement and oversight capability changed: whether an OEM, sheriff, fire district, county consultant, or board can independently test a vendor-backed plan instead of accepting a black-box output."
+  ],
+  "closest_systems_and_attempts": [
+    "WUI-NITY/PREACT is the closest open integrated attempt. The 2020 NFPA report describes coupled fire, pedestrian, and traffic simulation plus dynamic vulnerability mapping; the public GitHub repo says the software is under active development, contains incomplete features and bugs, only the Windows dev branch works, and one macro traffic module is broken while SUMO is preferred.",
+    "WiSE is the closest probabilistic planning platform. The 2024/2025 paper says it integrates fire dynamics, a human behavior model, and traffic simulation to estimate safe egress probability; the SFPE WUI Research Library says Pacific Gas & Electric sponsored the project and that it was validated against the 2018 Camp Fire.",
+    "Genasys Protect/Zonehaven is the strongest evacuation-zoning and alerting incumbent. Genasys said in June 2021 that Zonehaven was trusted by more than 170 fire districts, 140 law enforcement agencies, 200 cities, and 3,300 evacuation zones covering 3.2 million people in Northern California and Southern Oregon.",
+    "Ladris is the strongest California planning-and-response commercial adjacent. Public pages show work with Marin, Truckee, Tahoe Basin, and Nevada County, plus an OEZ standard for evacuation zones; its differentiation is operational packaging and customer deployment rather than open benchmarking.",
+    "WUI-PEM is a methodology, not a full simulation stack. It offers a six-step phased zone evacuation method for planning, management, and training.",
+    "WUISHOW is a collaborative visualization layer, not a standalone benchmarked simulator. The 2025 publication describes it as a digital collaborative decision-making tool for procedural visualization of wildfire evacuation simulations.",
+    "PyroRL and AgentEvac are the closest open algorithmic adjacencies. PyroRL is a published RL environment for wildfire evacuation, but at gridworld abstraction; AgentEvac couples SUMO with LLM-driven agents, but public evidence suggests an early-stage research codebase rather than a field-validated county tool.",
+    "Recent coupled or adjacent research includes Camp Fire ABM work, Kincade decision and traffic studies, Glass and Silverado traffic-data analyses, time-expanded network routing, RESCUE dynamic routing, route optimization on the 2023 McDougall Creek fire, and conformal-risk-control fire-mapping work. These are important ingredients, but not a turnkey California planning benchmark."
+  ],
+  "publication_and_group_attention_since_2020": [
+    "[uncertain] A scoped 2020-August 9, 2026 search surfaced a real but still niche literature, with roughly a low-dozens number of directly relevant wildfire-evacuation outputs across integrated simulation, traffic analysis, human behavior, drills, and routing. Attention is growing, but it is not broad or crowded by mainstream ML or disaster-tech standards.",
+    "The work is concentrated in a small number of clusters: Lund University/NFPA/NRC/NIST around WUI-NITY, verification, traffic, and WUISHOW; UCLA/B. John Garrick Institute around WiSE; University of Utah, University of Florida, RMIT, and NIST-linked authors around Kincade/Camp Fire behavior and traffic; UC Berkeley/UC ITS around California strategy studies; Stanford SISL around PyroRL; and smaller open-source efforts such as AgentEvac.",
+    "This concentration matters: it means there is cumulative knowledge, but also that a few labs and vendors shape much of the agenda, and there is still no clearly dominant open benchmark that counties can use off the shelf."
+  ],
+  "funding_commercial_and_government_activity": [
+    "[uncertain] Government and quasi-public activity is substantial. NIST funded the 2020 WUI-NITY report and the Camp Fire NETTRA work, updated ESCAPE guidance in April 2025, and worked with communities to integrate recommendations. FEMA/USFA published national wildfire evacuation planning guidance in 2026.",
+    "California public planning activity is also active. Nevada County says CAL FIRE granted $135,422 for an evacuation study that paired local expertise with wildfire behavior and traffic modeling. OPR/LCI guidance ties evacuation requirements to safety-element updates.",
+    "Commercial activity is strongest around Genasys and Ladris. Genasys' June 2021 acquisition press release says Zonehaven already served hundreds of agencies and millions of residents. Ladris markets planning, response, public-ready products, and a free open evacuation zone standard, and publicly cites deployments or studies in Marin, Truckee, Tahoe, and Nevada County.",
+    "WiSE appears to have had utility-backed sponsorship rather than pure academic funding. The SFPE WUI Research Library states that PG&E sponsored the project."
+  ],
+  "benchmark_and_open_source_maturity": [
+    "[uncertain] Open-source maturity is still weak at the end-to-end planning layer. WUI-NITY/PREACT is public, but the repo itself warns about incomplete features, bugs, Windows-only development, and a broken macro traffic module; the fire-import path is recommended because it is the most verified and validated.",
+    "PyroRL is cleaner and more reproducible as software research. It has a JOSS paper, repository, archive, and standard Gymnasium-style framing, but it is designed for RL experimentation rather than county egress planning.",
+    "AgentEvac is promising for behavior experimentation because it couples SUMO with PADM-style LLM agents, but public uptake is still small and operational validation is absent in the surfaced evidence.",
+    "There are useful open fragments: Kincade survey data/code, traffic datasets for Kincade and Glass, public case-study reports, and benchmark-style drill data from Roxborough Park. What is missing is a shared California scenario suite, a common interchange format, and a standard evaluation oracle for plan robustness."
+  ],
+  "residual_contribution": [
+    "[uncertain] Firescape still has a real residual niche if it does not try to become another vendor stack. The differentiated contribution is an open, vendor-agnostic falsification layer for evacuation plans under adversarial or worst-case assumptions.",
+    "That niche is not 'better GIS' or 'better alerts.' It is a reproducible way to ask: where does this plan fail first, which assumptions are carrying the result, which households or zones are sacrificed, and which mitigation options change the outcome most under equal budgets.",
+    "The best-positioned product is therefore an audit-and-benchmark tool: import public or agency plans, replay stylized and historical fire envelopes, search for brittle cases, and output decision-ready artifacts for safety elements, CWPPs, CEQA review, grant prioritization, and procurement oversight."
+  ],
+  "why_little_attention": [
+    "[uncertain] The residual pathway gets limited attention because it sits in an awkward space between academia and operations. Researchers often stop at publishable models; agencies pay for dependable maps, alerts, and support; and vendors have weak incentives to fund open benchmarking of failure cases.",
+    "Validation is expensive because real no-notice wildfire data are sparse, ethically hard to collect, and politically sensitive. Liability risk also makes agencies conservative about novel tooling.",
+    "This is partly an opportunity and partly a warning. Opportunity: the open public-good benchmark layer is underprovided. Warning: the same adoption frictions could keep a technically good tool outside real workflows."
+  ],
+  "public_data_and_ground_truth": [
+    "[uncertain] Public inputs are good enough for a first loop, but not for a final operational product. Fire inputs can come from CAL FIRE/NIFC incident records, FRAP-style spatial data, weather/fuels layers, and precomputed fire spread rasters from accepted simulators. Road and topology data can come from OpenStreetMap and local GIS. Traffic reference data can come from Caltrans PeMS and published wildfire-traffic datasets.",
+    "Behavior and vulnerability data are partially public: Census/ACS variables, social vulnerability indicators, the Kincade household-survey repo, GPS-derived evacuation studies, and NIST's Camp Fire case study.",
+    "Ground truth is strongest for a few historical cases, especially Camp Fire and parts of Kincade, Glass, and Silverado. Ground truth is much weaker for real-time communications failures, cross-jurisdiction coordination, tourist populations, access-and-functional-needs populations, and vendor-internal decision logic."
+  ],
+  "simulator_and_tool_options": [
+    "Fire layer options: import precomputed outputs from FlamMap/FARSITE/WISE/Prometheus into an evacuation stack, as WUI-NITY supports, or use an open spread simulator such as ELMFIRE, Cell2Fire, ForeFire, or another raster-producing tool for scenario generation.",
+    "Traffic layer options: SUMO/libsumo is the most practical open choice for first-loop routing and closure experiments. MATSim is an alternative for larger demand modeling but adds setup overhead.",
+    "Behavior layer options: start with empirical distributions and simple decision models grounded in Camp Fire and Kincade work. Treat LLM-driven agents from AgentEvac or FLARE-like models as an exploratory branch, not the core benchmark.",
+    "Planning and visualization options: WUI-NITY/PREACT can be studied or adapted; WUISHOW-like collaboration views can come later; GIS outputs can remain simple GeoJSON/FlatGeobuf plus static maps in the first loop."
+  ],
+  "recommended_technical_stack": [
+    "[uncertain] Recommended first-loop stack: Python orchestration; SUMO/libsumo for road-network evacuation; precomputed fire-arrival rasters or shapefiles from a trusted simulator; OSM plus local road edits; Census/ACS-derived household demand; and a simple event schema for alerts, closures, phased zones, and TFRAs.",
+    "Use reproducible CLI jobs and scenario manifests rather than a heavy UI. Store traces in Parquet, geospatial outputs in GeoJSON or FlatGeobuf, and summary metrics in JSON/CSV. Keep a small web map or notebook-based replay for inspection.",
+    "Keep WUI-NITY, WiSE, Ladris, and Genasys as comparators or import targets, not hard dependencies. The first technical objective is auditable stress testing, not replacing their front ends."
+  ],
+  "repeated_unresolved_limitations": [
+    "Published work repeatedly runs into the same problems: limited validation datasets, heavy dependence on assumed behavior, and weak comparability across studies.",
+    "Open tools remain fragile. WUI-NITY's public repo explicitly mentions incomplete features and bugs; its macro traffic module is broken; and some models are not recommended because they are not fully verified and validated.",
+    "Operational workflows remain fragmented. Ladris' OEZ page argues that jurisdictions still hand-copy zones between GIS and alerting systems, which is a real systems-integration failure rather than a pure modeling failure.",
+    "Communications reliability remains unresolved. Los Angeles County's January 2025 statement shows that even when a targeted message is prepared correctly, downstream software and telecom failures can still break public trust."
+  ],
+  "excluded_populations_geographies_and_failures": [
+    "[uncertain] Current work underserves people with access and functional needs, critical transportation needs, care facilities, carless households, tourists, non-English speakers, large-animal evacuations, and communities with severe telecom or power outage risk.",
+    "Many published or vendor-visible examples focus on road egress and general households, but not enough on assisted evacuation, disability access, smoke visibility, abandoned-vehicle behavior, or simultaneous cross-county incidents.",
+    "A Paradise-Magalia first loop would also miss dense urban-interface contexts, heavy visitor surges like Tahoe, and highly coordinated metro warning systems. That is acceptable for a first loop only if the exclusions are stated explicitly."
+  ],
+  "why_now": [
+    "Why now is stronger than it was a few years ago. NIST updated ESCAPE in April 2025, said 30 California communities had already incorporated the earlier guidance, and emphasized no-notice planning, decision zones, and predesignated refuge areas.",
+    "The regulatory and planning context is sharper. OPR/LCI guidance ties SB 99, AB 747, and AB 1409 to safety-element obligations, and CEQA wildfire scrutiny has intensified after recent California litigation.",
+    "The data and research base is also richer. Camp Fire, Kincade, Glass, Silverado, Nevada County, Tahoe, and Roxborough Park together provide more calibration and benchmark material than was available in 2020.",
+    "Commercial adoption and public failures are visible enough to create demand for independent audit. Genasys and Ladris show that agencies buy evacuation technology; the January 2025 Los Angeles alert failure shows why transparent robustness testing matters."
+  ],
+  "hidden_dependencies_and_penalties": [
+    "[uncertain] The biggest hidden dependency is not compute; it is credibility. If the fire-arrival envelope, demand generation, or route-closure logic looks unrealistic to practitioners, the benchmark can be dismissed regardless of software quality.",
+    "Adoption also depends on access to real local plans, zone files, and road assumptions. A public-data-only benchmark is possible, but it will understate local nuance and could be attacked as not decision-grade.",
+    "There is a procurement penalty: counties often prefer supported systems over open tools. There is a legal penalty: results used in CEQA or safety-element debates must be defensible, documented, and cautious. There is a sim-to-reality penalty: human behavior remains one of the least certain layers."
+  ],
+  "falsifiable_hypothesis": [
+    "Hypothesis: in a Paradise-Magalia-style California WUI envelope, an open adversarial stress-testing layer built on public data and SUMO-class traffic simulation will find at least one decision-relevant failure mode that a standard as-planned baseline misses, and at least one feasible mitigation that improves a primary safety metric by 20% or more without materially worsening the worst-off zone.",
+    "Failure condition: the open stress test does not reveal anything beyond simple staged-evacuation, vehicle-reduction, or route-priority heuristics, or the results are too sensitive to arbitrary fire and behavior assumptions to be trusted."
+  ],
+  "strongest_baselines": [
+    "[uncertain] Strong baselines should include both operational and academic comparators: the existing published or agency evacuation plan as written; a simple all-at-once shortest-path baseline; a UCITS-style strategy baseline using phased evacuation, vehicle reduction, and parking controls; and at least one route-optimization baseline such as time-expanded network planning or RESCUE-style dynamic routing.",
+    "If accessible, imported plans or exports from WUI-NITY/PREACT, Genasys zone structures, or Ladris-style scenarios should be treated as external baselines rather than ignored.",
+    "Behavior should also be benchmarked against simple empirical departure models derived from Camp Fire/Kincade-style studies before introducing richer agent logic."
+  ],
+  "experiment_protocol": [
+    "[uncertain] Use one primary California envelope first: Paradise-Magalia or another Camp Fire-derived geography with public evidence. Build a reproducible scenario pack with road network, household demand, zone definitions, fire-arrival layers, closure rules, alert timing rules, and optional TFRAs.",
+    "Run baseline plans against an adversarial search over road closures, delayed or ambiguous alerts, tourist-demand surges, vehicle scarcity, shadow evacuation, telecom failure, and vulnerable-population penalties. Use multiple random seeds per envelope and retain full replay traces.",
+    "Metrics should include clearance-time distributions, hazard exposure, stranded households, TFRA usage, worst-zone disparity, and robustness gap between nominal and stressed performance. Hold out at least one secondary envelope such as Kincade, Glass, or Silverado in stylized form."
+  ],
+  "success_and_kill_thresholds": [
+    "[uncertain] Go threshold: the benchmark surfaces reproducible brittle cases that practitioners would recognize as plausible, and at least one mitigation reduces a major safety metric such as 95th-percentile clearance time, exposed population, or stranded households by about 20% on the primary envelope while avoiding major regressions on held-out cases.",
+    "Downgrade threshold: the tool is only useful on toy abstractions, or the gains disappear once compared with simple phasing or vehicle-reduction heuristics.",
+    "Kill threshold: results are dominated by uncalibrated fire assumptions, cannot beat simple baselines, or cannot be explained clearly enough for a consultant, OEM, or reviewer to trust."
+  ],
+  "solo_30_60_day_feasibility": [
+    "[uncertain] A solo researcher can probably execute a narrow first loop in 30-60 days if the goal is benchmark generation, not a polished operational platform.",
+    "A realistic scope is: 1-2 weeks for data packaging and scenario schema, 1-2 weeks for SUMO integration and baseline replay, 1-2 weeks for adversarial scenario search and metrics, and 1 week for report-quality artifacts and sanity checks.",
+    "This becomes non-solo quickly if the scope expands to live fire modeling, county-grade UI, multilingual public products, or direct integration with agency alerting systems."
+  ],
+  "twelve_month_proof_target": [
+    "[uncertain] A credible 12-month target is an open California wildfire-evacuation benchmark suite with 3-5 historical or stylized envelopes, a published evaluation protocol, replayable failure traces, and one real pilot with a county, fire safe council, or consultant team using it as a planning audit.",
+    "A stronger translation proof would be one documented case where the benchmark changes a route project ranking, zone design, CEQA appendix, evacuation drill design, or vendor comparison."
+  ],
+  "actors_and_translation_path": [
+    "Key actors are county OEM directors, sheriffs, CAL FIRE unit planners, fire districts, public works and traffic engineers, MPO or transportation consultants, safety-element and CEQA consultants, Fire Safe Councils, and state guidance bodies such as OPR/LCI and Cal OES.",
+    "The insertion point is pre-incident planning: safety-element revisions, local hazard mitigation plans, CWPP updates, evacuation-study grants, after-action reviews, annual drills, and vendor procurement or renewal.",
+    "The usable outputs are not academic metrics alone. They are failure maps, route-priority tables, zone-timing recommendations, TFRA gaps, alert-timing stress cases, and a short technical appendix that can survive policy or legal scrutiny."
+  ],
+  "strongest_rejection_argument": [
+    "[uncertain] The strongest rejection case is that Firescape may solve the wrong layer. Agencies already buy tools for zoning, messaging, and planning support, while the real blockers are liability, local politics, funding for physical mitigation, and incomplete local data rather than lack of another simulator.",
+    "If an open benchmark cannot access real local plans or persuade practitioners that its stress cases are realistic, it could become an interesting research artifact with little effect on actual evacuation decisions."
+  ],
+  "evidence_that_changes_decision": [
+    "[uncertain] Evidence that would raise the ranking: a county or consultant willing to test the benchmark on a real plan; access to actual zone files and scenario assumptions; proof that vendor or consultant outputs miss brittle no-notice cases; and replication of useful findings on more than one California envelope.",
+    "Evidence that would lower or reverse the ranking: vendor systems already provide equivalent no-notice robustness testing in practice; the open benchmark cannot outperform simple heuristics; or the results swing wildly with minor changes in fire or behavior assumptions."
+  ],
+  "go_no_go_assessment": {
+    "judgment": "CONDITIONAL GO",
+    "importance": 5,
+    "leverage": 4,
+    "neglectedness": 3,
+    "tractability": 3,
+    "accessibility": 4,
+    "marginal_contribution": 4,
+    "translation": 3,
+    "evidence_confidence": 3,
+    "rationale": [
+      "[uncertain] The pathway is important and still differentiated, but only in a narrow form.",
+      "The evidence supports building an open audit-and-stress-test layer, not a full commercial evacuation platform.",
+      "The best first loop is a benchmark-first, California-specific, vendor-agnostic system that makes brittle assumptions visible and produces decision-ready planning artifacts.",
+      "This should be stopped quickly if it cannot beat simple phasing and route heuristics, or if no practitioner wants to use the outputs in an actual planning workflow."
+    ]
+  },
+  "sources": [
+    {
+      "title": "WUI-NITY: a platform for the simulation of wildland-urban interface fire evacuation",
+      "url": "https://content.nfpa.org/-/media/Project/Storefront/Catalog/Files/Research/Research-Foundation/Reports/WUI/RFWUINITY.pdf",
+      "date": "2020-04",
+      "source_type": "NFPA / Fire Protection Research Foundation report",
+      "claim_supported": "WUI-NITY couples fire, pedestrian, and traffic simulation; uses FARSITE, trigger buffers, and case studies; aimed at planning and situational awareness."
+    },
+    {
+      "title": "bran-jnw/wuinity",
+      "url": "https://github.com/bran-jnw/wuinity",
+      "date": "accessed 2026-08-09",
+      "source_type": "GitHub repository",
+      "claim_supported": "Public WUI-NITY/PREACT code exists, but repo warns of incomplete features, bugs, Windows-only development, and broken macro traffic support."
+    },
+    {
+      "title": "A Bayesian agent-based model and software for wildfire safe evacuation planning and management",
+      "url": "https://journals.sagepub.com/doi/10.1177/1748006X241259215",
+      "date": "2024-07-26 first published online",
+      "source_type": "Peer-reviewed journal article",
+      "claim_supported": "WiSE integrates fire dynamics, human behavior, and traffic to estimate safe egress probability."
+    },
+    {
+      "title": "WUI Research Library - Wildfire Egress Model and Simulation Platform entry",
+      "url": "https://www.sfpe.org/foundation/wildland-urban-interface/wuiresearch",
+      "date": "accessed 2026-08-09",
+      "source_type": "SFPE Foundation research library",
+      "claim_supported": "PG&E sponsored WiSE; the platform integrates human decision, traffic, and wildfire models and was validated against the 2018 Camp Fire."
+    },
+    {
+      "title": "WUI-PEM: Wildfire Phased Zone Evacuation Methodology",
+      "url": "https://ojs.iscram.org/index.php/Proceedings/article/view/78",
+      "date": "2024",
+      "source_type": "Conference proceedings article",
+      "claim_supported": "WUI-PEM is a six-step methodology for staged zone evacuation planning, management, and training."
+    },
+    {
+      "title": "WUISHOW: A digital collaborative wildfire evacuation platform",
+      "url": "https://portal.research.lu.se/en/publications/wuishow-a-digital-collaborative-wildfire-evacuation-platform/",
+      "date": "2025-09-01",
+      "source_type": "Published meeting abstract / university publication page",
+      "claim_supported": "WUISHOW is a collaborative visualization and decision-support interface for simulation outputs, not a standalone benchmarked simulator."
+    },
+    {
+      "title": "PyroRL: A Reinforcement Learning Environment for Wildfire Evacuation",
+      "url": "https://joss.theoj.org/papers/10.21105/joss.06739",
+      "date": "2024-09-18",
+      "source_type": "JOSS software paper",
+      "claim_supported": "PyroRL is a published open RL environment for wildfire evacuation research."
+    },
+    {
+      "title": "denoslab/AgentEvac",
+      "url": "https://github.com/denoslab/AgentEvac",
+      "date": "accessed 2026-08-09",
+      "source_type": "GitHub repository",
+      "claim_supported": "AgentEvac is an open SUMO plus LLM wildfire evacuation simulator focused on PADM-style agent behavior."
+    },
+    {
+      "title": "OEZ Standard",
+      "url": "https://www.ladris.com/products/open-evacuation-zones",
+      "date": "accessed 2026-08-09",
+      "source_type": "Commercial product page",
+      "claim_supported": "Ladris offers a free open evacuation zone standard integrated with existing GIS and alerting tools and says it is in production across multiple states."
+    },
+    {
+      "title": "Marin Wildfire Protection Authority selects Ladris AI for disaster readiness",
+      "url": "https://www.ladris.com/news/marin-selects-ladris",
+      "date": "2024-03-06",
+      "source_type": "Commercial press release",
+      "claim_supported": "Marin selected Ladris to enhance evacuation preparedness and evaluate options to reduce evacuation times."
+    },
+    {
+      "title": "Tahoe Basin wildfire evacuation simulations spotlight infrastructure limitations and public safety dangers",
+      "url": "https://www.ladris.com/news/tahoe-basin-wildfire-evacuation-simulations-spotlight-infrastructure-limitations-public-safety-dangers",
+      "date": "2024-08-28",
+      "source_type": "Commercial press release",
+      "claim_supported": "Ladris and partners ran 400+ Tahoe-wide simulations and reported much longer evacuations than legacy planning assumptions."
+    },
+    {
+      "title": "Town of Truckee customer story",
+      "url": "https://www.ladris.com/stories/answering-the-question-how-much-time-do-we-have-to-evacuate",
+      "date": "accessed 2026-08-09",
+      "source_type": "Commercial customer story",
+      "claim_supported": "Truckee used Ladris during the Mosquito Fire threat and generated an evacuation plan within hours."
+    },
+    {
+      "title": "Nevada County Evacuation Study",
+      "url": "https://www.nevadacountyca.gov/3831/Nevada-County-Evacuation-Study",
+      "date": "accessed 2026-08-09",
+      "source_type": "County government page",
+      "claim_supported": "CAL FIRE grant funding supported a county evacuation study; Ladris performed wildfire and traffic modeling for scenario ranking."
+    },
+    {
+      "title": "Genasys Inc. Acquires Emergency Evacuation SaaS Provider, Zonehaven",
+      "url": "https://genasys.com/press-releases/genasys-inc-acquires-emergency-evacuation-saas-provider-zonehaven/",
+      "date": "2021-06-09",
+      "source_type": "Commercial press release",
+      "claim_supported": "Zonehaven had broad California adoption before acquisition and became part of the Genasys stack."
+    },
+    {
+      "title": "Yuba County, California - Government",
+      "url": "https://genasys.com/case-studies/yuba-county-california-case-study/",
+      "date": "accessed 2026-08-09",
+      "source_type": "Commercial case study",
+      "claim_supported": "Yuba County uses Genasys Protect for evacuation management and repopulation; case study describes cross-agency use and reduced dispatch burden."
+    },
+    {
+      "title": "Alert San Diego",
+      "url": "https://www.alertsandiego.org/",
+      "date": "accessed 2026-08-09",
+      "source_type": "County emergency portal",
+      "claim_supported": "San Diego County's public emergency portal links residents to Genasys Protect for live zones and road closures."
+    },
+    {
+      "title": "Los Angeles County Moves to Immediately Address Emergency Alert Problems and Implement Solutions",
+      "url": "https://lacounty.gov/2025/01/10/los-angeles-county-moves-to-immediately-address-emergency-alert-problems-and-implement-solutions/",
+      "date": "2025-01-10",
+      "source_type": "County government statement",
+      "claim_supported": "A correctly targeted alert was erroneously sent to nearly 10 million residents; Genasys and telecom issues were under review."
+    },
+    {
+      "title": "Fire Hazard Planning Technical Advisory",
+      "url": "https://www.lci.ca.gov/wp-content/uploads/20220817-Fire_Hazard_Planning_TA.pdf",
+      "date": "2022-08-17",
+      "source_type": "California state planning guidance",
+      "claim_supported": "SB 99, AB 747, and AB 1409 create evacuation-planning obligations in California safety elements and related planning documents."
+    },
+    {
+      "title": "Draft Evacuation Planning Technical Advisory Released for Public Comment",
+      "url": "https://lci.ca.gov/newsroom/news/2023/10-05/",
+      "date": "2023-10-05",
+      "source_type": "California state planning announcement",
+      "claim_supported": "California continued to refine evacuation-planning guidance for local governments under SB 99, AB 747, and AB 1409."
+    },
+    {
+      "title": "A Case Study of the Camp Fire - Notification, Evacuation, Traffic, and Temporary Refuge Areas (NETTRA)",
+      "url": "https://www.nist.gov/publications/case-study-camp-fire-notification-evacuation-traffic-and-temporary-refuge-areas-nettra",
+      "date": "2023-07-18",
+      "source_type": "NIST case study",
+      "claim_supported": "Camp Fire evacuation scale, fatalities, and the importance of traffic, notification, and temporary refuge areas."
+    },
+    {
+      "title": "NIST Updates Critical Wildfire Evacuation and Sheltering Guidance",
+      "url": "https://www.nist.gov/news-events/news/2025/04/nist-updates-critical-wildfire-evacuation-and-sheltering-guidance",
+      "date": "2025-04-24",
+      "source_type": "NIST news release",
+      "claim_supported": "ESCAPE guidance was updated; 30 California communities had incorporated earlier guidance; no-notice planning and TFRAs were emphasized."
+    },
+    {
+      "title": "National Wildfire Evacuation Planning Guidance, 1st Edition",
+      "url": "https://www.usfa.fema.gov/downloads/pdf/publications/national-wildfire-evacuation-guidance-1st-edition.pdf?cacheKey=1783555200124",
+      "date": "2026",
+      "source_type": "USFA/FEMA guidance",
+      "claim_supported": "Federal guidance now provides a structured evacuation planning framework including zones, routing, notifications, and AFN/CTN populations."
+    },
+    {
+      "title": "Six roads to safety: New study finds a critical threshold for wildfire survival",
+      "url": "https://www.universityofcalifornia.edu/news/six-roads-safety-new-study-finds-critical-threshold-wildfire-survival",
+      "date": "2026-06-04",
+      "source_type": "University news release",
+      "claim_supported": "National egress-threshold evidence quantifies how many people live in communities with structurally poor evacuation access."
+    },
+    {
+      "title": "Testing Wildfire Evacuation Strategies and Coordination Plans for Wildland-Urban Interface Communities in California",
+      "url": "https://ucits.org/projects/testing-wildfire-evacuation-strategies-and-coordination-plans-for-wildland-urban-interface-communities-in-california/",
+      "date": "2021-08-01 to 2023-06-30 project window",
+      "source_type": "UC ITS project page",
+      "claim_supported": "California-focused public research on strategy testing exists, including policy-oriented scenario evaluation."
+    },
+    {
+      "title": "Traffic dynamics during the 2019 Kincade wildfire evacuation",
+      "url": "https://www.sciencedirect.com/science/article/pii/S136192092300007X",
+      "date": "2023",
+      "source_type": "Peer-reviewed journal article",
+      "claim_supported": "Empirical traffic-flow data for a major California wildfire evacuation exist for model calibration and validation."
+    },
+    {
+      "title": "The analysis of traffic data of wildfire evacuation: the case study of the 2020 Glass Fire",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0379711223001777",
+      "date": "2023",
+      "source_type": "Peer-reviewed journal article",
+      "claim_supported": "Glass Fire data show background traffic and observed traffic dynamics matter for validation."
+    },
+    {
+      "title": "Traffic Performance Indicators for Evacuation: The Case Study of the 2020 Silverado Wildfire",
+      "url": "https://link.springer.com/article/10.1007/s10694-025-01813-y",
+      "date": "2025",
+      "source_type": "Peer-reviewed journal article",
+      "claim_supported": "Silverado wildfire analysis extends empirical traffic benchmarking and performance indicators."
+    },
+    {
+      "title": "Social vulnerabilities and wildfire evacuations: A case study of the 2019 Kincade Fire",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0925753524001474",
+      "date": "2024",
+      "source_type": "Peer-reviewed journal article",
+      "claim_supported": "Social vulnerability affects evacuation behavior and should be represented in planning and benchmarking."
+    },
+    {
+      "title": "Fast-moving dire wildfire evacuation simulation",
+      "url": "https://ncst.ucdavis.edu/research-product/fast-moving-dire-wildfire-evacuation-simulation",
+      "date": "2022",
+      "source_type": "Research product summary",
+      "claim_supported": "Camp Fire-inspired ABM work targets extreme no-notice wildfire evacuation scenarios and highlights behavior gaps."
+    },
+    {
+      "title": "Conformal Risk Control for Safety-Critical Wildfire Evacuation Mapping",
+      "url": "https://arxiv.org/abs/2603.22331",
+      "date": "2026-03-20",
+      "source_type": "arXiv preprint",
+      "claim_supported": "Recent work applies formal safety guarantees to wildfire threat mapping, showing a path for robust or adversarial evaluation."
+    },
+    {
+      "title": "Evacuation Planning on Time-Expanded Networks with Integrated Wildfire Information",
+      "url": "https://arxiv.org/abs/2410.14500",
+      "date": "2024-10-18",
+      "source_type": "arXiv preprint",
+      "claim_supported": "Recent open algorithmic work addresses wildfire-aware routing but not the full planning stack."
+    }
+  ],
+  "uncertain": [
+    "publication_and_group_attention_since_2020",
+    "funding_commercial_and_government_activity",
+    "benchmark_and_open_source_maturity",
+    "residual_contribution",
+    "why_little_attention",
+    "public_data_and_ground_truth",
+    "recommended_technical_stack",
+    "excluded_populations_geographies_and_failures",
+    "hidden_dependencies_and_penalties",
+    "strongest_baselines",
+    "experiment_protocol",
+    "success_and_kill_thresholds",
+    "solo_30_60_day_feasibility",
+    "twelve_month_proof_target",
+    "strongest_rejection_argument",
+    "evidence_that_changes_decision",
+    "go_no_go_assessment"
+  ]
+}

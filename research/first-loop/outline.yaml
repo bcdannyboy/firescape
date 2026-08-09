@@ -1,0 +1,42 @@
+topic: "Firescape first end-to-end research loop"
+research_date: "2026-08-08"
+research_window: "Primary emphasis on 2020-08-08 through 2026-08-08; older foundational work included where necessary."
+decision_question: >-
+  Is an open-source adversarial stress-testing layer for wildfire evacuation still a
+  differentiated, useful, and solo-tractable research program, and if so what exact
+  simulator, algorithm, benchmark, validation, and translation plan should be built first?
+items:
+  - name: "landscape_attention_and_adoption"
+    category: "Neglectedness and translation"
+    description: >-
+      Map exact competitors and adjacent systems, publication and group concentration,
+      government and commercial activity, California planning requirements, practitioner
+      use, failed or weak deployments, open-versus-closed gaps, decision actors, and the
+      precise residual contribution Firescape could make. Include WUI-NITY 4, Ladris,
+      Genasys, WiSE, PyroRL, AgentEvac, WUI-PEM, WUISHOW, recent coupled fire-traffic-
+      behavior work, recent California case studies, and relevant robust/adversarial work.
+  - name: "public_data_simulators_and_validation"
+    category: "Technical feasibility"
+    description: >-
+      Audit the public California data, open simulators, interfaces, licenses, runtime,
+      preprocessing burden, empirical ground truth, validation ladders, and missing data
+      needed for a Paradise-Magalia end-to-end experiment. Compare ELMFIRE, Cell2Fire,
+      ForeFire, PyTorchFire, WUI-NITY, SUMO/libsumo, MATSim, public hazard/traffic/
+      demographic/zone data, NIST Camp Fire evidence, and Kincade/Glass/Silverado traffic
+      evidence. Recommend a concrete versioned stack that one software researcher can run.
+  - name: "algorithm_experiment_and_go_gate"
+    category: "Algorithmic research design"
+    description: >-
+      Design the first falsifiable adversarial-search experiment: scenario representation,
+      plausible joint constraints, safety and equity oracles, strong equal-budget baselines,
+      adaptive stress-testing and rare-event candidates, quality-diversity, failure replay
+      and minimization, intervention attack-repair-retest, held-out and cross-model checks,
+      compute accounting, success and kill thresholds, 30-60 day scope, 12-month proof
+      target, hidden dependencies, and a final GO/CONDITIONAL-GO/NO-GO judgment.
+execution:
+  batch_size: 3
+  items_per_agent: 1
+  output_dir: "research/first-loop/results"
+  approval_note: >-
+    The user explicitly requested a comprehensive first end-to-end research loop; run the
+    single three-agent batch without an additional checkpoint.
